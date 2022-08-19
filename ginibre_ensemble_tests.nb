@@ -1,0 +1,635 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     26430,        627]
+NotebookOptionsPosition[     22089,        553]
+NotebookOutlinePosition[     23182,        579]
+CellTagsIndexPosition[     23139,        576]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Pruebas con el ensamble de Ginibre", "Title",
+ CellChangeTimes->{{3.852373171956086*^9, 3.8523731917096643`*^9}, {
+  3.852373227335681*^9, 
+  3.852373244767107*^9}},ExpressionUUID->"1191e4f9-042b-42db-923d-\
+8b32366fb6ab"],
+
+Cell["\<\
+Un estado bipartito puede ser expresado como combinaci\[OAcute]n lineal de la \
+base computacional (dimensi\[OAcute]n 4). En general, tendr\[AAcute] cuatro \
+coeficientes complejos que pueden organizarse en una matriz de 2 x 2. Como \
+nosotros generamos esos coeficientes complejos muestre\[AAcute]ndolos de la \
+distribuci\[OAcute]n normal, la matriz de 2 x 2 coincide con una matriz del \
+ensamble de Ginibre. Sin embargo, la normalizaci\[OAcute]n de los estados no \
+me termina de encajar en estos razonamientos. A continuaci\[OAcute]n se har\
+\[AAcute]n pruebas para dilucidar este problema.\
+\>", "Text",
+ CellChangeTimes->{{3.852373258867762*^9, 
+  3.85237345852172*^9}},ExpressionUUID->"13472399-2aa8-4c56-b2fe-\
+3eb9fa4e0114"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<CoolTools`\>\"", "]"}], "\n", 
+ RowBox[{"Needs", "[", "\"\<Quantum`\>\"", "]"}]}], "Code",
+ CellChangeTimes->{{3.852373470665455*^9, 3.852373485427972*^9}, {
+  3.852373530321434*^9, 3.852373538910571*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"770d13d1-1e26-45c0-ae13-d35194ef94e6"],
+
+Cell["\<\
+En el art\[IAcute]culo de \[OpenCurlyQuote]Entanglement Typicality\
+\[CloseCurlyQuote] se menciona que para generar estados puros distribuidos \
+con la medida de Haar se fija un estado y se le aplican unitarias aleatorias \
+Haar. Se dice tambi\[EAcute]n que este proceso es equivalente a generar s\
+\[OAcute]lo las matrices unitarias Haar y tomarles una de sus columnas. (No s\
+\[EAcute] por qu\[EAcute] lo anterior es v\[AAcute]lido, pero ser\[IAcute]a \
+genial).
+Para generar las unitarias Haar se puede hacer lo siguiente: Generar matrices \
+del ensamble de Ginibre, aplicar Gram-Schmidt a sus columnas para obtener una \
+matriz unitaria y tomar la primera de estas columnas. En el art\[IAcute]culo \
+de Mezzadri se afirma que generar matrices unitarias con Gram-Schmidt sobre \
+el ensamble de Ginibre las genera distribuidas con la medida de Haar, sin \
+embargo este proceso es num\[EAcute]ricamente inestable. No se indica con qu\
+\[EAcute] valores de promedio y varianza se deben generar las entradas de las \
+matrices de Ginibre, por lo que al generarlas con media cero creo que saldr\
+\[AAcute]n kets puros. Por ahora no importa si el proceso es estable o no, \
+pues no queremos generar las matrices completas sino s\[OAcute]lo obtener sus \
+primeras columnas, las cuales se generar\[AAcute]n tan s\[OAcute]lo \
+normalizando el primer vector de las matrices de Ginibre. \
+\>", "Text",
+ CellChangeTimes->{{3.8523736636885033`*^9, 3.852373678067986*^9}, {
+  3.852373710139333*^9, 3.852373721432063*^9}, {3.852382727603683*^9, 
+  3.8523827294489803`*^9}, {3.8523827625537157`*^9, 3.8523829784786577`*^9}, {
+  3.85238329750311*^9, 
+  3.852383522840116*^9}},ExpressionUUID->"e50168ef-4091-46fa-9d96-\
+216a9ea84c12"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Generando matrices del ensemble de Ginibre y generando kets puros \
+\>", "Section",
+ CellChangeTimes->{{3.852373683846354*^9, 3.8523736982127132`*^9}, {
+  3.852383692353701*^9, 3.852383707841502*^9}, {3.8525811943763323`*^9, 
+  3.8525812000104237`*^9}},ExpressionUUID->"49d959d0-9788-4714-9de6-\
+79b6426383d3"],
+
+Cell["\<\
+Las matrices del ensemble de Ginibre s\[OAcute]lo son matrices cuyas entradas \
+son variables aleatorias complejas normales est\[AAcute]ndar i. i. d. Al ser \
+independientes asumir\[EAcute] que su matriz de correlaci\[OAcute]n es la \
+matriz identidad. Sus entradas tendr\[AAcute]n media igual a cero.\
+\>", "Text",
+ CellChangeTimes->{{3.852383790476318*^9, 3.85238386944987*^9}, {
+  3.852384204078928*^9, 3.852384213510449*^9}, {3.852555634848011*^9, 
+  3.852555639404531*^9}},ExpressionUUID->"9efcce83-d6bb-40c8-9587-\
+450d75ffeb5e"],
+
+Cell["\<\
+NOTA: Muchos art\[IAcute]culos indican que las entradas de las matrices deben \
+tener distribuci\[OAcute]n N(0,1/2) para que la funci\[OAcute]n de densidad \
+de las variables aleatorias en cuesti\[OAcute]n tenga a la identidad como \
+matriz de correlaci\[OAcute]n. No entiendo la raz\[OAcute]n detr\[AAcute]s de \
+esto, puesto que adem\[AAcute]s, nosotros generamos las variables aleatorias \
+con distribuci\[OAcute]n N(0,1). Dejaremos esta varianza como un \
+par\[AAcute]metro para ver qu\[EAcute] sucede en cada caso.\
+\>", "Text",
+ CellChangeTimes->{{3.85238391265958*^9, 
+  3.8523840866151257`*^9}},ExpressionUUID->"2a971b9f-ba69-4837-b79c-\
+1ed9046e5a5c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "Funci\[OAcute]n", " ", "general", " ", "que", " ", "devuelve", " ", 
+     "una", " ", "lista", " ", "de", " ", "matrices", " ", "de", " ", 
+     "Ginibre", " ", "de", " ", "dimensi\[OAcute]n", " ", "N", " ", "x", " ", 
+     "M"}], ",", " ", 
+    RowBox[{
+    "con", " ", "media", " ", "\[Mu]", " ", "y", " ", "varianza", " ", 
+     "\[Sigma]"}]}], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{"ginibreEnsembleList", "[", 
+    RowBox[{
+    "samplesize_", ",", " ", "N_", ",", " ", "M_", ",", " ", "\[Mu]_", ",", 
+     " ", "\[Sigma]_"}], "]"}], ":=", " ", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Complex", " ", "@@", " ", 
+        RowBox[{"RandomVariate", "[", 
+         RowBox[{
+          RowBox[{"NormalDistribution", "[", 
+           RowBox[{"\[Mu]", ",", "\[Sigma]"}], "]"}], ",", " ", "2"}], 
+         "]"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "N"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"j", ",", "M"}], "}"}]}], "]"}], ",", " ", "samplesize"}], 
+    "]"}]}]}]], "Code",
+ CellChangeTimes->{{3.852384095688974*^9, 3.8523841019417877`*^9}, {
+  3.852384159595375*^9, 3.8523841604484777`*^9}, {3.852384693825521*^9, 
+  3.85238469643482*^9}, {3.8523847280275393`*^9, 3.852384753200465*^9}, {
+  3.8525558357941637`*^9, 3.852555990783111*^9}, {3.8525560465817213`*^9, 
+  3.852556094418095*^9}, {3.852556175416553*^9, 
+  3.8525561780299664`*^9}},ExpressionUUID->"7f2b823b-fd03-490f-829b-\
+2194f78314de"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Prueba", " ", "de", " ", "uso"}], "*)"}], "\n", 
+  RowBox[{"MatrixForm", " ", "/@", " ", 
+   RowBox[{"ginibreEnsembleList", "[", 
+    RowBox[{"3", ",", " ", "2", ",", " ", "2", ",", " ", "0", ",", " ", "1"}],
+     "]"}]}]}]], "Code",
+ CellChangeTimes->{{3.852556157149192*^9, 3.852556219859977*^9}},
+ CellLabel->"In[91]:=",ExpressionUUID->"55339202-b908-4ed9-9a2b-f2673c937821"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TagBox[
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {
+        RowBox[{"0.6489820161717469`", "\[VeryThinSpace]", "+", 
+         RowBox[{"0.347096301480603`", " ", "\[ImaginaryI]"}]}], 
+        RowBox[{"0.29579488874192605`", "\[VeryThinSpace]", "+", 
+         RowBox[{"0.33838458254983467`", " ", "\[ImaginaryI]"}]}]},
+       {
+        RowBox[{"0.3501582675549845`", "\[VeryThinSpace]", "+", 
+         RowBox[{"0.3379235366984834`", " ", "\[ImaginaryI]"}]}], 
+        RowBox[{
+         RowBox[{"-", "1.368362269473457`"}], "-", 
+         RowBox[{"0.29353041902545485`", " ", "\[ImaginaryI]"}]}]}
+      },
+      GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}}], "\[NoBreak]", ")"}],
+    Function[BoxForm`e$, 
+     MatrixForm[BoxForm`e$]]], ",", 
+   TagBox[
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {
+        RowBox[{
+         RowBox[{"-", "0.5113806611254442`"}], "+", 
+         RowBox[{"1.3082487266356628`", " ", "\[ImaginaryI]"}]}], 
+        RowBox[{
+         RowBox[{"-", "0.3299284692725025`"}], "+", 
+         RowBox[{"0.6101183742904849`", " ", "\[ImaginaryI]"}]}]},
+       {
+        RowBox[{"0.317672945448309`", "\[VeryThinSpace]", "-", 
+         RowBox[{"0.27559335782560657`", " ", "\[ImaginaryI]"}]}], 
+        RowBox[{"0.5790255562334147`", "\[VeryThinSpace]", "-", 
+         RowBox[{"0.2675105693973676`", " ", "\[ImaginaryI]"}]}]}
+      },
+      GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}}], "\[NoBreak]", ")"}],
+    Function[BoxForm`e$, 
+     MatrixForm[BoxForm`e$]]], ",", 
+   TagBox[
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {
+        RowBox[{"2.0593372124568576`", "\[VeryThinSpace]", "-", 
+         RowBox[{"0.40470854063905654`", " ", "\[ImaginaryI]"}]}], 
+        RowBox[{
+         RowBox[{"-", "0.10991680428340142`"}], "+", 
+         RowBox[{"0.9659553965065995`", " ", "\[ImaginaryI]"}]}]},
+       {
+        RowBox[{
+         RowBox[{"-", "0.5124864598850136`"}], "-", 
+         RowBox[{"0.41205011652510437`", " ", "\[ImaginaryI]"}]}], 
+        RowBox[{"1.669890307309398`", "\[VeryThinSpace]", "+", 
+         RowBox[{"0.7196787889822398`", " ", "\[ImaginaryI]"}]}]}
+      },
+      GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}}], "\[NoBreak]", ")"}],
+    Function[BoxForm`e$, 
+     MatrixForm[BoxForm`e$]]]}], "}"}]], "Output",
+ CellChangeTimes->{{3.852556207729838*^9, 3.852556220670312*^9}},
+ CellLabel->"Out[91]=",ExpressionUUID->"694736ec-9e31-4cfe-9ec4-9750d9bd520c"]
+}, Open  ]],
+
+Cell["\<\
+Ahora, se supone que tomando la media 0 y la varianza finita se recuperan los \
+estados puros\
+\>", "Text",
+ CellChangeTimes->{{3.852564877582343*^9, 3.852564891066622*^9}, {
+  3.8525716018155823`*^9, 
+  3.852571618128237*^9}},ExpressionUUID->"0244e592-1168-4206-955a-\
+cc3003f86bb7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"dim", " ", "=", " ", "1"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"media", " ", "=", " ", "0"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"varianza", " ", "=", " ", 
+   RowBox[{"1", "/", "2"}]}], ";"}]}], "Code",
+ CellChangeTimes->{{3.852571623577497*^9, 3.852571626429356*^9}, {
+  3.852571808954256*^9, 3.852571851731238*^9}, {3.8525724005485573`*^9, 
+  3.852572400810748*^9}, {3.852579429145483*^9, 3.8525794295709677`*^9}, {
+  3.8525795793017397`*^9, 3.852579579995676*^9}, {3.852579712227707*^9, 
+  3.85257971432436*^9}},
+ CellLabel->
+  "In[144]:=",ExpressionUUID->"483e620d-8125-4c76-853d-b88289d0af39"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"edospurosGinibre", " ", "=", " ", 
+   RowBox[{"Flatten", " ", "/@", " ", 
+    RowBox[{"ginibreEnsembleList", "[", 
+     RowBox[{
+     "1000", ",", " ", "2", ",", " ", "dim", ",", " ", "media", ",", " ", 
+      "varianza"}], "]"}]}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.852571855528345*^9, 3.852571884314231*^9}, {
+   3.8525719861949263`*^9, 3.85257198918502*^9}, {3.852579340268688*^9, 
+   3.852579345453657*^9}, 3.852579377639448*^9, {3.852579664085207*^9, 
+   3.8525796946204023`*^9}},
+ CellLabel->
+  "In[158]:=",ExpressionUUID->"9b91d1bb-0c04-4610-9040-0909ed4257b4"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Mean", "[", 
+  RowBox[{"Norm", " ", "/@", " ", "edospurosGinibre"}], "]"}]], "Code",
+ CellChangeTimes->{{3.852571894079094*^9, 3.852571995189457*^9}, {
+  3.852572370722686*^9, 3.8525724155171223`*^9}},
+ CellLabel->
+  "In[159]:=",ExpressionUUID->"fedca12d-5d4c-4f04-b32b-e802ba3bfd16"],
+
+Cell[BoxData["0.9351159159405522`"], "Output",
+ CellChangeTimes->{{3.852571897050941*^9, 3.852571995677802*^9}, {
+   3.852572388721735*^9, 3.852572415816793*^9}, {3.852579342435473*^9, 
+   3.85257934711271*^9}, {3.8525793790372963`*^9, 3.852579384209276*^9}, {
+   3.852579432477191*^9, 3.852579438222775*^9}, 3.852579583526821*^9, {
+   3.8525796664386578`*^9, 3.8525797527954073`*^9}},
+ CellLabel->
+  "Out[159]=",ExpressionUUID->"803dff0c-608a-4d66-9cef-a1bda3fbdfbf"]
+}, Open  ]],
+
+Cell["\<\
+Veamos qu\[EAcute] pasa si revisamos distintos valores para la varianza:\
+\>", "Text",
+ CellChangeTimes->{{3.852579802525609*^9, 
+  3.852579816042428*^9}},ExpressionUUID->"3368acf8-b41c-41a6-8c63-\
+4a3114c9c248"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"varianzas", " ", "=", " ", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"0.1", " ", "i"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", "20"}], "}"}]}], "]"}]}]], "Code",
+ CellChangeTimes->{{3.852579885007*^9, 3.8525799364319487`*^9}, {
+  3.852580627804867*^9, 3.852580628513542*^9}},
+ CellLabel->
+  "In[170]:=",ExpressionUUID->"b13e4b01-24c3-4967-a923-337be65190aa"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.1`", ",", "0.2`", ",", "0.30000000000000004`", ",", "0.4`", ",", "0.5`", 
+   ",", "0.6000000000000001`", ",", "0.7000000000000001`", ",", "0.8`", ",", 
+   "0.9`", ",", "1.`", ",", "1.1`", ",", "1.2000000000000002`", ",", "1.3`", 
+   ",", "1.4000000000000001`", ",", "1.5`", ",", "1.6`", ",", 
+   "1.7000000000000002`", ",", "1.8`", ",", "1.9000000000000001`", ",", 
+   "2.`"}], "}"}]], "Output",
+ CellChangeTimes->{3.852579937551886*^9, 3.8525806293847017`*^9},
+ CellLabel->
+  "Out[170]=",ExpressionUUID->"a22abb7c-c28c-4400-ad6e-a3a4ae2065d6"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"multipleVariancesGinibreKets", " ", "=", " ", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Flatten", " ", "/@", " ", 
+        RowBox[{"ginibreEnsembleList", "[", 
+         RowBox[{
+         "100", ",", " ", "2", ",", " ", "dim", ",", " ", "media", ",", " ", 
+          "#"}], "]"}]}], ")"}], "&"}], ",", " ", "varianzas"}], "]"}]}], 
+  ";"}]], "Code",
+ CellChangeTimes->{{3.8525799827785683`*^9, 3.852580087550929*^9}},
+ CellLabel->
+  "In[173]:=",ExpressionUUID->"f96bf61e-f36d-468f-a35c-adcaec1c39b2"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Map", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"Mean", "[", 
+      RowBox[{"Norm", " ", "/@", " ", "#"}], "]"}], ")"}], "&"}], ",", " ", 
+   "multipleVariancesGinibreKets"}], "]"}]], "Code",
+ CellChangeTimes->{{3.8525803677895184`*^9, 3.852580406699403*^9}},
+ CellLabel->
+  "In[174]:=",ExpressionUUID->"895a58dc-fce9-488d-b4b5-daf70dd21e0d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "0.191710584238654`", ",", "0.3821966166575962`", ",", 
+   "0.5574741795949092`", ",", "0.7746538445696529`", ",", 
+   "0.9159048588852198`", ",", "1.0332333761434551`", ",", 
+   "1.2296783914000329`", ",", "1.609678851030652`", ",", 
+   "1.6586623659429562`", ",", "1.790024345620051`", ",", 
+   "2.057113922194434`", ",", "2.2849969986485634`", ",", 
+   "2.458259312822775`", ",", "2.49892587555977`", ",", "2.788624054253903`", 
+   ",", "2.93245381152095`", ",", "3.144218025046492`", ",", 
+   "3.4278214403103893`", ",", "3.6765971620459372`", ",", 
+   "3.9267345927080943`"}], "}"}]], "Output",
+ CellChangeTimes->{3.852580461826619*^9, 3.852580641206173*^9, 
+  3.852580788265078*^9},
+ CellLabel->
+  "Out[174]=",ExpressionUUID->"597740e8-827e-4376-8315-5d32e52f4420"]
+}, Open  ]],
+
+Cell["\<\
+Curiosamente, con varianza igual a 0.5 el respectivo conjunto de kets tiene \
+la norma m\[AAcute]s cercana a 1. Veamos qu\[EAcute] pasa con una varianza \
+entre 0.5 y 0.6:\
+\>", "Text",
+ CellChangeTimes->{{3.852580666940292*^9, 
+  3.8525807522385*^9}},ExpressionUUID->"25cf5c91-6333-424e-9358-b4293fe111db"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"edosPurosGinibreSpecificVar", " ", "=", " ", 
+   RowBox[{"Flatten", " ", "/@", " ", 
+    RowBox[{"ginibreEnsembleList", "[", 
+     RowBox[{
+     "1000", ",", " ", "2", ",", " ", "dim", ",", " ", "media", ",", " ", 
+      "0.528"}], "]"}]}]}], ";"}]], "Code",
+ CellChangeTimes->{{3.852580888009787*^9, 3.852580923823448*^9}, {
+  3.852580980853541*^9, 3.8525810955322847`*^9}},
+ CellLabel->
+  "In[198]:=",ExpressionUUID->"62395b4a-50a3-46d3-a88a-b59af608a3a7"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Mean", "[", 
+  RowBox[{"Norm", " ", "/@", " ", "edosPurosGinibreSpecificVar"}], 
+  "]"}]], "Code",
+ CellChangeTimes->{{3.852581028548263*^9, 3.8525810395224943`*^9}},
+ CellLabel->
+  "In[199]:=",ExpressionUUID->"ec9e4636-fc33-4fcb-9662-7a7df45b2ca6"],
+
+Cell[BoxData["0.9691825995430304`"], "Output",
+ CellChangeTimes->{{3.8525810410750093`*^9, 3.852581097020587*^9}},
+ CellLabel->
+  "Out[199]=",ExpressionUUID->"57cea07a-f68b-469e-a970-4c1d223196b0"]
+}, Open  ]],
+
+Cell["\<\
+Bueno, pues parece que s\[OAcute]lo generando matrices de Ginibre no salen \
+normalizados los vectores con seguridad. De hecho no tendr\[IAcute]a por qu\
+\[EAcute] ser as\[IAcute], pero en el art\[IAcute]culo de Entanglement \
+Typicality se entiende algo as\[IAcute]. Para varianzas entre 0.5 y 0.6 puede \
+acercarse, pero nos gustar\[IAcute]a ser exactos. Por otro lado, en el mismo \
+art\[IAcute]culo, se menciona que tomar la primera columna de unitarias Haar \
+(generadas a partir del ensemble de Ginibre con Gram-Schimdt) ya nos da kets \
+puros distribuidos con la medida de Haar. As\[IAcute], s\[OAcute]lo basta con \
+normalizar las primeras columnas de la muestra de matrices que acabamos de \
+generar.\
+\>", "Text",
+ CellChangeTimes->{{3.8525724305417147`*^9, 3.852572437130239*^9}, {
+  3.852572544794705*^9, 3.8525726498740377`*^9}, {3.852572688071412*^9, 
+  3.85257274631875*^9}, {3.852581114170244*^9, 3.852581156112735*^9}, {
+  3.852581311200144*^9, 
+  3.852581314226303*^9}},ExpressionUUID->"fd2d7c7e-4a86-4697-8808-\
+cf8101880146"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Generando kets puros con unitarias Haar", "Section",
+ CellChangeTimes->{{3.852581209258669*^9, 
+  3.852581220134446*^9}},ExpressionUUID->"c77c5b61-5366-44a0-9a0c-\
+2215afd8520d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "Generamos", " ", "muchas", " ", "matrices", " ", "del", " ", "ensemble", 
+     " ", "de", " ", 
+     RowBox[{"Ginibre", ".", " ", "Para"}], " ", "generar", " ", "edos", " ", 
+     "de", " ", "un", " ", "qubit"}], ",", " ", 
+    RowBox[{
+    "necesitaremos", " ", "matrices", " ", "de", " ", "2", " ", "x", " ", 
+     "2.", " ", "Tomaremos", " ", "despu\[EAcute]s", " ", "s\[OAcute]lo", " ",
+      "la", " ", "primera", " ", "columna", "\n", "de", " ", "cada", " ", 
+     "una", " ", "de", " ", "ellas"}]}], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{"matricesGinibre", " ", "=", " ", 
+    RowBox[{"ginibreEnsembleList", "[", 
+     RowBox[{
+     "100", ",", " ", "2", ",", " ", "2", ",", " ", "0", ",", " ", "1"}], 
+     "]"}]}], ";"}]}]], "Code",
+ CellChangeTimes->{{3.8525812334271812`*^9, 3.852581277676422*^9}, {
+  3.8525813374536877`*^9, 3.852581507636539*^9}, {3.852584041767314*^9, 
+  3.852584054479595*^9}},ExpressionUUID->"b9744085-c433-4541-9b10-\
+b646725acc6e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Ahora", ",", " ", 
+    RowBox[{
+     RowBox[{
+     "convertimos", " ", "las", " ", "matrices", " ", "en", " ", "unitarias", 
+      " ", "Haar", " ", "al", " ", "aplicarles", " ", "Gram"}], "-", 
+     RowBox[{"Schmidt", " ", "a", " ", "sus", " ", "columnas"}]}]}], "*)"}], 
+  "\n", 
+  RowBox[{
+   RowBox[{"unitariasHaar", " ", "=", " ", 
+    RowBox[{"Map", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Transpose", "[", 
+        RowBox[{"Orthogonalize", "[", 
+         RowBox[{"Transpose", "[", "#", "]"}], "]"}], "]"}], "&"}], ",", " ", 
+      "matricesGinibre"}], "]"}]}], ";"}]}]], "Code",
+ CellChangeTimes->{{3.8525815703407383`*^9, 3.852581633458*^9}, {
+  3.852581667484757*^9, 3.852581668508687*^9}, {3.852583982372575*^9, 
+  3.852584076205529*^9}, {3.852584189003599*^9, 3.852584209388688*^9}, {
+  3.8525844378736467`*^9, 3.852584469804104*^9}},
+ CellLabel->
+  "In[224]:=",ExpressionUUID->"6ff4a61c-6dea-49f5-b41c-ead9a428f816"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Tomamos", " ", "la", " ", "primera", " ", "columna", " ", "de", " ", 
+    "cada", " ", "una", " ", "de", " ", "las", " ", 
+    RowBox[{"unitarias", ":"}]}], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{"ketsHaar", " ", "=", " ", 
+    RowBox[{"Map", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "&"}], ",", " ", 
+      RowBox[{"Transpose", " ", "/@", " ", "unitariasHaar"}]}], "]"}]}], 
+   ";"}]}]], "Code",
+ CellChangeTimes->{{3.8525847736929607`*^9, 3.852584799063126*^9}, {
+  3.852584848514707*^9, 3.852584858579075*^9}, {3.852584991955155*^9, 
+  3.8525851179552727`*^9}},
+ CellLabel->
+  "In[230]:=",ExpressionUUID->"0e1deb34-2990-48a2-a892-6af5fd0c9d2d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Mean", "[", 
+  RowBox[{"Norm", " ", "/@", " ", "ketsHaar"}], "]"}]], "Code",
+ CellChangeTimes->{{3.85258522390615*^9, 3.85258523930501*^9}},
+ CellLabel->
+  "In[238]:=",ExpressionUUID->"e902773c-f982-479f-b4fd-7768fe6dfc59"],
+
+Cell[BoxData["1.`"], "Output",
+ CellChangeTimes->{{3.8525852318281107`*^9, 3.852585239705564*^9}},
+ CellLabel->
+  "Out[238]=",ExpressionUUID->"ae0c29de-598c-4047-a319-a19559589489"]
+}, Open  ]],
+
+Cell["\<\
+Vemos que al tomar la primera columna de muchas matrices unitarias Haar \
+obtenemos kets normalizados. \
+\>", "Text",
+ CellChangeTimes->{{3.8525853891490307`*^9, 3.852585445471777*^9}, {
+  3.852597233330453*^9, 
+  3.8525972363280373`*^9}},ExpressionUUID->"e7f540a5-0fae-48c8-9850-\
+b5e858e08286"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1390.5, 762.},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
+SpellingDictionaries->{"CorrectWords"->{
+ "aleatoriamente", "kets", "mapeos", "m\[AAcute]ximamente", "Carlo", "mapeo", 
+  "preimagen", "Optimizaci\[OAcute]n", "hamiltonianos", 
+  "optimizaci\[OAcute]n", "parametrizaci\[OAcute]n", "derivable", "coarse", 
+  "descent", "mapeado", "ket", "learning", "graficamos", "Barzilai", 
+  "functions", "Bures", "target", "Hastings", "invariancia", "gaussianos", 
+  "bidimensionales", "computacional", "Ginibre", "muestre\[AAcute]ndolos", 
+  "normalizaci\[OAcute]n", "Gram", "Schimdt", "Mezzadri", "Schmidt", 
+  "ensemble", "Entanglement", "Typicality"}},
+FrontEndVersion->"12.3 para Linux x86 (64-bit) (July 9, 2021)",
+StyleDefinitions->FrontEnd`FileName[{$RootDirectory, "home", "esnavarrete", 
+   "Documentos"}, "DarkMode.nb", CharacterEncoding -> "UTF-8"],
+ExpressionUUID->"35f0e1ad-34df-4137-86f3-58d8f53c7114"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 228, 4, 98, "Title",ExpressionUUID->"1191e4f9-042b-42db-923d-8b32366fb6ab"],
+Cell[811, 28, 744, 12, 72, "Text",ExpressionUUID->"13472399-2aa8-4c56-b2fe-3eb9fa4e0114"],
+Cell[1558, 42, 326, 5, 56, "Code",ExpressionUUID->"770d13d1-1e26-45c0-ae13-d35194ef94e6"],
+Cell[1887, 49, 1728, 26, 152, "Text",ExpressionUUID->"e50168ef-4091-46fa-9d96-216a9ea84c12"],
+Cell[CellGroupData[{
+Cell[3640, 79, 320, 6, 68, "Section",ExpressionUUID->"49d959d0-9788-4714-9de6-79b6426383d3"],
+Cell[3963, 87, 545, 9, 52, "Text",ExpressionUUID->"9efcce83-d6bb-40c8-9587-450d75ffeb5e"],
+Cell[4511, 98, 670, 11, 72, "Text",ExpressionUUID->"2a971b9f-ba69-4837-b79c-1ed9046e5a5c"],
+Cell[5184, 111, 1555, 38, 56, "Code",ExpressionUUID->"7f2b823b-fd03-490f-829b-2194f78314de"],
+Cell[CellGroupData[{
+Cell[6764, 153, 431, 9, 56, "Code",ExpressionUUID->"55339202-b908-4ed9-9a2b-f2673c937821"],
+Cell[7198, 164, 3232, 78, 39, "Output",ExpressionUUID->"694736ec-9e31-4cfe-9ec4-9750d9bd520c"]
+}, Open  ]],
+Cell[10445, 245, 294, 7, 32, "Text",ExpressionUUID->"0244e592-1168-4206-955a-cc3003f86bb7"],
+Cell[10742, 254, 633, 14, 76, "Code",ExpressionUUID->"483e620d-8125-4c76-853d-b88289d0af39"],
+Cell[11378, 270, 609, 13, 34, "Code",ExpressionUUID->"9b91d1bb-0c04-4610-9040-0909ed4257b4"],
+Cell[CellGroupData[{
+Cell[12012, 287, 308, 6, 34, "Code",ExpressionUUID->"fedca12d-5d4c-4f04-b32b-e802ba3bfd16"],
+Cell[12323, 295, 468, 7, 25, "Output",ExpressionUUID->"803dff0c-608a-4d66-9cef-a1bda3fbdfbf"]
+}, Open  ]],
+Cell[12806, 305, 222, 5, 32, "Text",ExpressionUUID->"3368acf8-b41c-41a6-8c63-4a3114c9c248"],
+Cell[CellGroupData[{
+Cell[13053, 314, 403, 10, 34, "Code",ExpressionUUID->"b13e4b01-24c3-4967-a923-337be65190aa"],
+Cell[13459, 326, 589, 11, 25, "Output",ExpressionUUID->"a22abb7c-c28c-4400-ad6e-a3a4ae2065d6"]
+}, Open  ]],
+Cell[14063, 340, 580, 15, 34, "Code",ExpressionUUID->"f96bf61e-f36d-468f-a35c-adcaec1c39b2"],
+Cell[CellGroupData[{
+Cell[14668, 359, 384, 10, 34, "Code",ExpressionUUID->"895a58dc-fce9-488d-b4b5-daf70dd21e0d"],
+Cell[15055, 371, 813, 16, 46, "Output",ExpressionUUID->"597740e8-827e-4376-8315-5d32e52f4420"]
+}, Open  ]],
+Cell[15883, 390, 317, 6, 32, "Text",ExpressionUUID->"25cf5c91-6333-424e-9358-b4293fe111db"],
+Cell[16203, 398, 493, 11, 34, "Code",ExpressionUUID->"62395b4a-50a3-46d3-a88a-b59af608a3a7"],
+Cell[CellGroupData[{
+Cell[16721, 413, 273, 6, 34, "Code",ExpressionUUID->"ec9e4636-fc33-4fcb-9662-7a7df45b2ca6"],
+Cell[16997, 421, 197, 3, 25, "Output",ExpressionUUID->"57cea07a-f68b-469e-a970-4c1d223196b0"]
+}, Open  ]],
+Cell[17209, 427, 1055, 17, 92, "Text",ExpressionUUID->"fd2d7c7e-4a86-4697-8808-cf8101880146"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18301, 449, 184, 3, 68, "Section",ExpressionUUID->"c77c5b61-5366-44a0-9a0c-2215afd8520d"],
+Cell[18488, 454, 1036, 23, 76, "Code",ExpressionUUID->"b9744085-c433-4541-9b10-b646725acc6e"],
+Cell[19527, 479, 992, 24, 56, "Code",ExpressionUUID->"6ff4a61c-6dea-49f5-b41c-ead9a428f816"],
+Cell[20522, 505, 762, 20, 56, "Code",ExpressionUUID->"0e1deb34-2990-48a2-a892-6af5fd0c9d2d"],
+Cell[CellGroupData[{
+Cell[21309, 529, 247, 5, 34, "Code",ExpressionUUID->"e902773c-f982-479f-b4fd-7768fe6dfc59"],
+Cell[21559, 536, 181, 3, 25, "Output",ExpressionUUID->"ae0c29de-598c-4047-a319-a19559589489"]
+}, Open  ]],
+Cell[21755, 542, 306, 7, 32, "Text",ExpressionUUID->"e7f540a5-0fae-48c8-9850-b5e858e08286"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
