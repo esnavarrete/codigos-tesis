@@ -270,7 +270,8 @@ exactAvgBVs = partialtarcesBV[swapGate . \[Rho]averageTwoQubitsbasiscomp[0.2, 0.
 Directory[]
 
 
-errors = {0.0009, 0.001, 0.0015, 0.0017, 0.002, 0.003, 0.006, 0.008, 0.01, 0.02, 0.03, 0.06, 0.1, 0.2}; 
+errors = {0.0009, 0.001, 0.0015, 0.0017, 0.002, 0.003, 0.006, 0.008, 0.01, 0.02, 0.03, 0.06, 0.1, 0.2};
+errors2 = {0.0005, 0.001, 0.002, 0.003, 0.006, 0.008, 0.02, 0.03, 0.06, 0.1, 0.2};
 exactAvgRp8Pp8 = swapGate . \[Rho]averageTwoQubitsbasiscomp[0.2,0.8] . swapGate;
 
 
@@ -301,6 +302,22 @@ samplesDiffErrors\[Delta]p005 = {
  mcsSampleEp0015\[Delta]p005 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p005/sampleMCS_n=7000_err=0.0015_delta=0.005_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
  mcsSampleEp0017\[Delta]p005 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p005/sampleMCS_n=7000_err=0.0017_delta=0.005_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
  mcsSampleEp002\[Delta]p005 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p005/sampleMCS_n=7000_err=0.002_delta=0.005_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1]
+};
+
+
+(*Y ac\[AAcute] van con \[Delta] = 0.001*)
+samplesDiffErrors\[Delta]p001 = {
+	mcsSampleEp0005\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.0005_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp001\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.001_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp002\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.002_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp003\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.003_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp006\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.006_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp008\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.008_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp02\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.02_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp03\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.03_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp06\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.06_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp1\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.1_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp2\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.2_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1]
 };
 
 
@@ -358,42 +375,7 @@ errors[[1;;5]]
 (*En el primer caso, la fidelidad sale mejor, curiosamente. Esto puede ser simplemente porque, en la gr\[AAcute]fica en la que no hay picos (\[Delta] = 0.01) el promedio de r y z se asemaja m\[AAcute]s al del brutal:*)
 
 
-tripleCylindricalPlot[brutalMegaSampleRp8Pp8, targets[[3]], 100,100,100, {Pink, Yellow}, {0.,1.1}, {-Pi, Pi}, {-1, 0.3}, {0., 0.65}]
-
-
-(* ::Text:: *)
-(*Parece ser que, con la delta de 0.01 y el error de 0.001 sale mejor la fidelidad aunque las esferas se vean "feas" y las distribuciones no se parezcan a las dem\[AAcute]s del MCS. Sin embargo, veamos los errores de cada punto de las muestras:*)
-
-
-errorsEp001 = Norm[coarseGraining2[#, 0.8]-targets[[3]], "Frobenius"]& /@ mcsSampleEp001;
-errorsEp001\[Delta]p005 = Norm[coarseGraining2[#, 0.8]-targets[[3]], "Frobenius"]& /@ mcsSampleEp001\[Delta]p005;
-
-
-{ListPlot[errorsEp001, PlotLabel->"\[Delta] = 0.01"], ListPlot[errorsEp001\[Delta]p005,  PlotLabel->"\[Delta] = 0.005"]}
-
-
-(* ::Text:: *)
-(*Se cumple al parecer lo que pens\[AAcute]bamos: Con la delta m\[AAcute]s grande es dif\[IAcute]cil que los puntos entren a la regi\[OAcute]n de inter\[EAcute]s porque el paso es muy grande en comparaci\[OAcute]n con el ancho del error. El algoritmo termina de ejecutarse s\[OAcute]lo porque tiene un l\[IAcute]mite de iteraciones establecido. Tenemos entonces que , un mal resultado de muestra (que resulta por escoger un error y un paso incompatibles) arroja una fidelidad mejor. \[DownQuestion]Qu\[EAcute] pasa si quitamos todos los puntos que no est\[EAcute]n en la regi\[OAcute]n de inter\[EAcute]s?*)
-
-
-mcsSampleEp001 =  Select[mcsSampleEp001, Norm[coarseGraining2[#,0.8]-targets[[3]],"Frobenius"] <= 0.001 &];
-
-
-errorsEp001 = Norm[coarseGraining2[#, 0.8]-targets[[3]], "Frobenius"]& /@ mcsSampleEp001;
-errorsEp001\[Delta]p005 = Norm[coarseGraining2[#, 0.8]-targets[[3]], "Frobenius"]& /@ mcsSampleEp001\[Delta]p005;
-
-
-{ListPlot[errorsEp001, PlotLabel->"\[Delta] = 0.01", PlotRange->{Full, 0.001}], ListPlot[Drop[errorsEp001\[Delta]p005, 16061],  PlotLabel->"\[Delta] = 0.005", PlotRange->{Full, 0.001}]}
-
-
-Show[Histogram[errorsEp001, Automatic, "Probability", ChartStyle->Blue], Histogram[Drop[errorsEp001\[Delta]p005,16061], Automatic, "Probability", ChartStyle->Opacity[0.7]]]
-
-
-(* ::Text:: *)
-(*Vemos que ahora las gr\[AAcute]ficas tienen el mismo valor m\[AAcute]ximo del error. Veamos sus fidelidades:*)
-
-
-{fidelity[preimageMean[mcsSampleEp001], exactAvgRp8Pp8], fidelity[preimageMean[Drop[mcsSampleEp001\[Delta]p005, 16061]], exactAvgRp8Pp8]}
+tripleCylindricalPlot[brutalMegaSampleRp8Pp8, targets[[3]], 100,100,100, {Pink, Yellow}, {0.,1.1}, {-Pi, Pi}, {-1,p001\[Delta]p005, 16061]], exactAvgRp8Pp8]}
 
 
 (* ::Text:: *)
