@@ -9,6 +9,7 @@
 
 
 Needs["Quantum`"]
+Needs["MaTeX`"]
 Get["/media/storage/ciencia/investigacion/proyecto-ss/adanerick/codigo/CoolTools.m"]
 Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/usefulFunctions.wl"]
 
@@ -20,13 +21,13 @@ SetDirectory["/media/storage/ciencia/investigacion/tesis/muestras_MCS"]
 (*Importando datos*)
 
 
-targets = Map[(IdentityMatrix[2] + # PauliMatrix[3])/2 &, {0, 0.5, 0.8}];
+targetState = (IdentityMatrix[2] + 0.8 PauliMatrix[3])/2;
 
 
 (*importando datos y juntando todos los puntos*)
 mcsMegaSampleRp8Pp8 = Join[
-	Flatten[Map[Get["distintasEnes_Rp8Pp8/sampleMCS_n="<>ToString[#]<>"_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8.wl"][[2]]&, {10000, 30000, 50000}],1],
-	Flatten[Map[Get["distintasEnes_Rp8Pp8/sampleMCS_n=10000_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[10]], 1],
+	Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p01/sampleMCS_n="<>ToString[#]<>"_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8.wl"][[2]]&, {10000, 30000, 50000}],1],
+	Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p01/sampleMCS_n=10000_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[10]], 1],
 	Get["initial_samples/sampleMCS_n=10000_err=0.01_paso=0.01_t=0.3_rz=0.8_p=0.8.m"][[2]]
 ];
 
@@ -40,19 +41,13 @@ brutalMegaSampleRp8Pp8 = Join[
 
 
 (*Quitamos los puntos "malos" de la muestra MCS*)
-mcsMegaSampleRp8Pp8 = Select[mcsMegaSampleRp8Pp8, Norm[coarseGraining2[#,0.8]-targets[[3]],"Frobenius"] <= 0.01 &];
-
-
-brutalMegaSampleRp8Pp8 = Drop[brutalMegaSampleRp8Pp8, 130000];
-
-
-Dimensions[brutalMegaSampleRp8Pp8]
-
-
-Dimensions[mcsMegaSampleRp8Pp8]
+mcsMegaSampleRp8Pp8 = Select[mcsMegaSampleRp8Pp8, Norm[coarseGraining2[#,0.8]-targetState,"Frobenius"] <= 0.01 &];
 
 
 mcsMegaSampleRp8Pp8 = Drop[mcsMegaSampleRp8Pp8, 25351];
+
+
+{Dimensions[brutalMegaSampleRp8Pp8], Dimensions[mcsMegaSampleRp8Pp8]}
 
 
 (* ::Section::Closed:: *)
@@ -145,35 +140,40 @@ zACompsBRsample = Map[#[[1,3]]&, bvsBRsample];
 zBCompsBRsample = Map[#[[2,3]]&, bvsBRsample];
 
 
-Grid[{{Histogram[zACompsMCSsample, 50, PlotTheme->"Detailed", PlotLabel->"Componentes \!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(A\)]\) para el MCS", FrameLabel->{"\!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(A\)]\)", "Frecuencia"}, 
-				 Epilog -> Inset[Framed[Grid[{
-                                       {"Mean =", Mean[zACompsMCSsample]},
-                                       {"Max =", Max[zACompsMCSsample]},
-                                       {"Min =", Min[zACompsMCSsample]}},
-                                        Alignment -> {{Left}}], Background -> White],
-                                       {Right, Center},{Right, Bottom}]], 
-	   Histogram[zACompsBRsample, 50, PlotTheme->"Detailed", PlotLabel->"Componentes \!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(A\)]\) para el Brutal", FrameLabel->{"\!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(A\)]\)", "Frecuencia"},
-	             Epilog -> Inset[Framed[Grid[{
-                                       {"Mean =", Mean[zACompsBRsample]},
-                                       {"Max =", Max[zACompsBRsample]},
-                                       {"Min =", Min[zACompsBRsample]}},
-                                        Alignment -> {{Left}}], Background -> White],
-                                       {Axis, Top},{Left, Top}]]},
-       {Histogram[zBCompsMCSsample, 50, PlotTheme->"Detailed", PlotLabel->"Componentes \!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(B\)]\) para el MCS", FrameLabel->{"\!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(B\)]\)", "Frecuencia"}, 
-				 Epilog -> Inset[Framed[Grid[{
-                                       {"Mean =", Mean[zBCompsMCSsample]},
-                                       {"Max =", Max[zBCompsMCSsample]},
-                                       {"Min =", Min[zBCompsMCSsample]}},
-                                        Alignment -> {{Left}}], Background -> White],
-                                       {Axis, Center},{Left, Bottom}]], 
-	   Histogram[zBCompsBRsample, 50, PlotTheme->"Detailed", PlotLabel->"Componentes \!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(B\)]\) para el Brutal", FrameLabel->{"\!\(\*SuperscriptBox[SubscriptBox[\(r\), \(z\)], \(B\)]\)", "Frecuencia"},
-	             Epilog -> Inset[Framed[Grid[{
-                                       {"Mean =", Mean[zBCompsBRsample]},
-                                       {"Max =", Max[zBCompsBRsample]},
-                                       {"Min =", Min[zBCompsBRsample]}},
-                                        Alignment -> {{Left}}], Background -> White],
-                                       {Right, Center},{Right,Bottom}]]}
-}]
+Length[zACompsMCSsample]
+
+
+binningMethod[bins_, counts_]:= counts/100000;
+
+
+Histogram[{zACompsBRsample, zACompsMCSsample}, Automatic, "Probability",
+		  ChartLegends->MaTeX[{"\\text{Brutal}", "\\text{MC}"}],
+		  ChartStyle->{RGBColor[1,0.67,0.77], RGBColor[1,0,0]}, 
+		  PlotTheme->"Scientific", 
+		  FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Densidad normalizada}"}],
+		   Epilog -> Inset[Framed[Grid[{{Item[MaTeX["\\text{Promedios}"], Alignment->Center], SpanFromLeft},
+                                       MaTeX[{"\\text{Brutal:} ", Mean[zACompsBRsample]}],
+                                       MaTeX[{"\\text{MC:} ", Mean[zACompsMCSsample]}]},
+                                        Alignment->":"], Background -> White],
+                                       {Right, Top},{Right,Top}], GridLines->Automatic]
+
+
+Export["histRZA_Rp8Pp8.pdf",%172]
+
+
+Histogram[{zBCompsBRsample, zBCompsMCSsample}, Automatic, "Probability",
+		  ChartLegends->MaTeX[{"\\text{Brutal}", "\\text{MC}"}], 
+		  ChartStyle->{Yellow, Green},
+		  PlotTheme->"Scientific", 
+		  FrameLabel->MaTeX[{"r_z^{(B)}", "\\text{Densidad normalizada}"}],
+		   Epilog -> Inset[Framed[Grid[{{Item[MaTeX["\\text{Promedios}"], Alignment->Center], SpanFromLeft},
+                                       MaTeX[{"\\text{Brutal:} ", Mean[zBCompsBRsample]}],
+                                       MaTeX[{"\\text{MC:} ", Mean[zBCompsMCSsample]}]},
+                                        Alignment->":"], Background -> White],
+                                       Scaled[{0,1}],{Left,Top}], GridLines->Automatic]
+
+
+Export["histRZB_Rp8Pp8.pdf",%170]
 
 
 Grid[{{Histogram[xACompsMCSsample, 50, PlotTheme->"Detailed", PlotLabel->"Componentes \!\(\*SuperscriptBox[SubscriptBox[\(r\), \(x\)], \(A\)]\) para el MCS", FrameLabel->{"\!\(\*SuperscriptBox[SubscriptBox[\(r\), \(x\)], \(A\)]\)", "Frecuencia"}, 
@@ -260,10 +260,10 @@ exactAvgBVs = partialtarcesBV[swapGate . \[Rho]averageTwoQubitsbasiscomp[0.2, 0.
 
 
 (* ::Text:: *)
-(*Hemos visto que aunque se cambie N, los picos del MCS aparcen en el mismo lugar. Creo que los picos aparecen por que son la "orilla" de la regi\[OAcute]n de inter\[EAcute]s \[CapitalOmega]. As\[IAcute], si cambiamos el valor del error (ancho de \[CapitalOmega]), me imagino que cambiar\[AAcute] la posici\[OAcute]n de los picos... Veamos.*)
+(*Hemos visto que aunque se cambie N, los picos del MCS aparecen en el mismo lugar. Creo que los picos aparecen por que son la "orilla" de la regi\[OAcute]n de inter\[EAcute]s \[CapitalOmega]. As\[IAcute], si cambiamos el valor del error (ancho de \[CapitalOmega]), me imagino que cambiar\[AAcute] la posici\[OAcute]n de los picos... Veamos.*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Importando datos para esta secci\[OAcute]n*)
 
 
@@ -312,7 +312,13 @@ samplesDiffErrors\[Delta]p001 = {
 	mcsSampleEp002\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.002_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp003\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.003_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp006\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.006_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
-	mcsSampleEp008\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.008_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp008\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.008_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
+	mcsSampleEp02\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.02_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
+	mcsSampleEp03\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.03_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
+	mcsSampleEp06\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.06_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
+	mcsSampleEp1\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.1_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
+	mcsSampleEp2\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.2_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]], 1],
+	mcsSampleEp02\[Delta]p001 = Flat\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.008_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp02\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.02_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp03\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.03_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp06\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.06_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
