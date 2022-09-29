@@ -7,6 +7,7 @@ numForm::usage="Args: matrix, n. Applies the function NumForm to the entries of 
 MatrixToLatex2::usage="Args: matrix. Returns a string with matrix formatted as Latex."
 visualizeMonopartiteSystem::usage="Args: states_List, refState_List. Plots states and refState on the Bloch Sphere. All states must be monopartite."
 distsToTarget::usage="Args: sample, targetstate, swapP. Calculates the Frobenius distances between 'targetstate' and the image of 'states' under CG with probability 'swapP'."
+cleanSample::usage="Args: [sample, rz, swapP, error]. Returns a sample without the states that doesn't fall into the error region."
 testDistribution::usage="Args: \[Beta], targetstate, state, swapP. Calculates the value of the probability distribution of our MH implementation corresponding to \[Beta] and the given target state, at the point 'state'."
 metropolisHastingsSample::usage="Args: size, \[Beta], \[Delta], swapP, initialstate, targetstate. Runs our implementation of Metropolis-Hastings algorithm with parameters 'size', \[Beta] and \[Delta]; starting from 'initialstate' and trying to reach the region of 'targetstate' with CG swapP."
 metropolisHastingsSampleTest::usage="Args: size, initialstate, params. Same as metropolisHastingsSample, just gathers all the parameters \[Beta], \[Delta], swapP and targetstate into a simgle variable."
@@ -26,6 +27,8 @@ visualizeMonopartiteSystem[states_List, refState_List]:= Show[Graphics3D[{PointS
 										Graphics3D[{PointSize[0.015], Red,Point[densityMatrixToPoint[refState, gellMannBasis[1]]]}],
 										 Graphics3D[{Opacity[0.3], Sphere[]}]];
 distsToTarget[sample_, targetstate_, swapP_]:= Map[Norm[coarseGraining2[#, swapP] - targetstate, "Frobenius"]&, sample];	
+cleanSample[sample_, rz_, swapP_, error_]:= With[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2},
+												 Select[sample, Norm[coarseGraining2[#, swapP]-targetstate, "Frobenius"] <= error &]];
 testDistribution[beta_,targetstate_,state_,swapP_]:= Exp[-beta*Norm[coarseGraining2[state, swapP]-targetstate, "Frobenius"]];
 metropolisHastingsSample[size_,\[Beta]_,\[Delta]_,swapP_,initialstate_,targetstate_]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}},
 	While[n < size,
