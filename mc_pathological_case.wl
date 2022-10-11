@@ -10,7 +10,7 @@
 
 Needs["Quantum`"]
 <<MaTeX`
-Get["/media/storage/ciencia/investigacion/proyecto-ss/adanerick/codigo/CoolTools.m"]
+Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/CoolTools2.m"]
 Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/usefulFunctions.wl"]
 
 
@@ -26,8 +26,8 @@ targets = Map[(IdentityMatrix[2] + # PauliMatrix[3])/2 &, {0, 0.5, 0.8}];
 
 (*importando datos y juntando todos los puntos*)
 mcsMegaSampleRp8Pp8 = Join[
-	Flatten[Map[Get["distintasEnes_Rp8Pp8/sampleMCS_n="<>ToString[#]<>"_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8.wl"][[2]]&, {10000, 30000, 50000}],1],
-	Flatten[Map[Get["distintasEnes_Rp8Pp8/sampleMCS_n=10000_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[10]], 1],
+	Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p01/sampleMCS_n="<>ToString[#]<>"_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8.wl"][[2]]&, {10000, 30000, 50000}],1],
+	Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p01/sampleMCS_n=10000_err=0.01_delta=0.01_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[10]], 1],
 	Get["initial_samples/sampleMCS_n=10000_err=0.01_paso=0.01_t=0.3_rz=0.8_p=0.8.m"][[2]]
 ];
 
@@ -50,7 +50,7 @@ Clear[brutalMegaSampleRp8Pp8]
 brutalMegaSampleRp8Pp8TIME = Total@Map[Get["../muestras_brutales_extra/samplesRp8Pp8/brutalSample_N=5000_err=0.01_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[1]]&, Range[6]]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Comparando distintos valores del error*)
 
 
@@ -165,18 +165,11 @@ samplesDiffErrors\[Delta]p0005 = {
 Clear[mcsSampleEp006\[Delta]p0005, mcsSampleEp008\[Delta]p0005, mcsSampleEp02\[Delta]p0005, mcsSampleEp03\[Delta]p0005, mcsSampleEp06\[Delta]p0005, mcsSampleEp1\[Delta]p0005, mcsSampleEp2\[Delta]p0005]
 
 
-(* ::Subsection::Closed:: *)
-(*Gr\[AAcute]ficas de histogramas y esferas*)
-
-
-spherePlots\[Delta]p01 = MapMonitored[visualizeBipartiteSystem[#[[1;;30000]]]&, samplesDiffErrors\[Delta]p01];
-
-
 (* ::Subsection:: *)
 (*Comportamiento de las fidelidades entre promedios en funci\[OAcute]n del error*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Gr\[AAcute]fica de las fidelidades*)
 
 
@@ -202,9 +195,12 @@ fidsVSerrorData\[Delta]p01PURGED = MapThread[{#1,#2}&, {errors, Map[1-fidelity[e
 generalFidsPlot = ListLogLogPlot[{fidsVSerrorData\[Delta]p1, fidsVSerrorData\[Delta]p005, fidsVSerrorData\[Delta]p001, fidsVSerrorData\[Delta]p0005},
 									PlotTheme->"Scientific",
 									GridLines->Automatic,
-									FrameLabel->MaTeX[{"\\text{Error}\, (\\epsilon)", "1 - F(\\mathcal{A}_{\\text{brutal}},\, \\mathcal{A}_{\\text{MC}})"}],
+									FrameLabel->MaTeX[{"\\text{Error}\, (\\varepsilon)", "1 - F(\\mathcal{A}_{\\text{brutal}},\, \\mathcal{A}_{\\text{MC}})"}],
 									FrameStyle->Black,
 									PlotLegends->PointLegend[{"0.1", "0.005", "0.001", "0.0005"}, LegendLabel->\[Delta], LabelStyle->Directive[Black, FontFamily->"Latin Modern Math"]]]
+
+
+Export["fidelidadVSerror_Rp8Pp8.pdf", %37]
 
 
 sampleErrorsEp008\[Delta]p1 = distsToTarget[samplesDiffErrors\[Delta]p1[[1]], targets[[3]], 0.8];
@@ -212,19 +208,31 @@ sampleErrorsEp008\[Delta]p0005 = distsToTarget[samplesDiffErrors\[Delta]p0005[[2
 
 
 {ListPlot[sampleErrorsEp008\[Delta]p1, PlotRange->{0, 0.008}, 
-		  PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics}"}]],
+		  PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]],
  ListPlot[sampleErrorsEp008\[Delta]p0005, PlotRange->{0, 0.008}, 
-          PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics}"}]]}
+          PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]]}
 
 
-cylPlotsEp008\[Delta]p1 = tripleCylindricalPlot[samplesDiffErrors\[Delta]p1[[1]], targets[[3]], 100, 100, 100];
-cylPlotsEp008\[Delta]p0005 = tripleCylindricalPlot[samplesDiffErrors\[Delta]p0005[[2]], targets[[3]], 100, 100, 100];
-cylPlotsBRUTAL = tripleCylindricalPlot[brutalMegaSampleRp8Pp8, targets[[3]], 100, 100, 100, {Pink, Yellow}];
+Export["errorsPlot_Rp8Pp8_deltap0005.pdf", %52[[2]]]
 
 
-generalLegend = Grid[{{PointLegend[{Red, Green}, MaTeX[{"\\tr_A", "\\tr_B"}, Preamble->{"\\usepackage{physics}"}], LegendLabel->MaTeX["\\text{Monte-Carlo}"], LegendLayout->"Row"]},
-	   {PointLegend[{Pink, Yellow}, MaTeX[{"\\tr_A", "\\tr_B"}, Preamble->{"\\usepackage{physics}"}], LegendLabel->MaTeX["\\text{Brutal}"], LegendLayout->"Row"]}
+cylPlotsEp008\[Delta]p1 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p1[[1]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}];
+cylPlotsEp008\[Delta]p0005 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p0005[[2]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}];
+cylPlotsBRUTAL = tripleCylindricalPlotNoFilling[brutalMegaSampleRp8Pp8, 0.8, {Hue[0.11,0.9,0.85], Hue[0.55,1,0.7]}, {Full, {0,6.21},Full}];
+
+
+generalLegend = 
+Grid[{{SwatchLegend[{Darker[Red,.2], Darker[Green, .2]}, 
+					MaTeX[{"\\tr_A", "\\tr_B"}, Preamble->{"\\usepackage{physics, newtxmath}"}], 
+					LegendLabel->MaTeX["\\text{Monte-Carlo}"], 
+					LegendLayout->"Row"]},
+	   {SwatchLegend[{Hue[0.11,0.9,0.85], Hue[0.55,1,0.7]}, 
+	                 MaTeX[{"\\tr_A", "\\tr_B"}, Preamble->{"\\usepackage{physics, newtxmath}"}], 
+	                 LegendLabel->MaTeX["\\text{Brutal}"], 
+	                 LegendLayout->"Row"]}
 }];
+
+
 Grid[{{Item[MaTeX["\\delta_1 = 0.1"], Frame->False], SpanFromLeft, SpanFromLeft, Item["", Frame->None]},
 	  MapThread[Show[#1, #2]&, {cylPlotsBRUTAL, cylPlotsEp008\[Delta]p1}]~Join~{Item[generalLegend, Alignment->Center, Frame->False]},
 	  {Item[MaTeX["\\delta_2 = 0.0005"], Frame->False], SpanFromLeft, SpanFromLeft}~Join~{SpanFromAbove},
@@ -232,7 +240,7 @@ Grid[{{Item[MaTeX["\\delta_1 = 0.1"], Frame->False], SpanFromLeft, SpanFromLeft,
 }]
 
 
-Export["cylPlots_Rp8Pp8_delta1and2.pdf", %1019]
+Export["cylPlots_Rp8Pp8_delta1and2.pdf", %352]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -243,29 +251,26 @@ zAComps\[Delta]p0005 = Map[Map[partialtarcesBV[#][[1,3]]&, #]&, samplesDiffError
 
 
 Histogram[{zAComps\[Delta]p0005[[1]]}~Join~zAComps\[Delta]p0005[[3;;4]], 100, "Probability", 
-	ChartLegends->SwatchLegend[MaTeX[{errors2[[5]]}~Join~errors2[[7;;8]]], LegendLabel->MaTeX["\\varepsilon"]], 
+	ChartLegends->SwatchLegend[MaTeX[{errors2[[5]]}~Join~errors2[[7;;8]]], LegendLabel->MaTeX["\\varepsilon", Preamble->{"\\usepackage{newtxmath}"}]], 
 	PlotTheme->"Scientific",
-	FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Densidad normalizada}"}],
+	FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Fracci\[OAcute]n de estados}"}, Preamble->{"\\usepackage{newtxmath}"}],
 	GridLines->Automatic]
 
 
-Export["distRZA_diffErrors_deltap0005.pdf", %113]
+Export["distRZA_diffErrors_deltap0005.pdf", %41]
 
 
 zAComps\[Delta]p001 = Map[Map[partialtarcesBV[#][[1,3]]&, #]&, samplesDiffErrors\[Delta]p001];
 
 
-errors2
-
-
 Histogram[{zAComps\[Delta]p001[[1]]}~Join~zAComps\[Delta]p001[[6;;8]], 100, "Probability", 
-ChartLegends->SwatchLegend[MaTeX[{errors2[[1]]}~Join~errors2[[6;;8]]], LegendLabel->MaTeX["\\varepsilon"]], 
+ChartLegends->SwatchLegend[MaTeX[{errors2[[1]]}~Join~errors2[[6;;8]]], LegendLabel->MaTeX["\\varepsilon", Preamble->{"\\usepackage{newtxmath}"}]], 
 PlotTheme->"Scientific",
-FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Densidad normalizada}"}],
+FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Fracci\[OAcute]n de estados}"}, Preamble->{"\\usepackage{newtxmath}"}],
 GridLines->Automatic]
 
 
-Export["distRZA_diffErrors_deltap001.pdf", %119]
+Export["distRZA_diffErrors_deltap001.pdf", %45]
 
 
 (* ::Text:: *)
@@ -470,30 +475,30 @@ initialstate = initStateGenerator[200, 0.01, 0.8, targets[[3]], 0.01];
 
 
 trajectory\[Delta]p0005 = simpleMCMinimizationList[{initialstate, targets[[3]], 0.8}, 0.008, 0.0005, 0.2];
-
-
 trajectory\[Delta]p001 = simpleMCMinimizationList[{initialstate, targets[[3]], 0.8}, 0.008, 0.001, 0.2];
 
 
 trajectory\[Delta]p01 = simpleMCMinimizationList[{initialstate, targets[[3]], 0.8}, 0.008, 0.01, 0.2];
+trajectory\[Delta]p1 = simpleMCMinimizationList[{initialstate, targets[[3]], 0.8}, 0.008, 0.1, 0.2];
 
 
-trajectory\[Delta]p08 = simpleMCMinimizationList[{initialstate, targets[[3]], 0.8}, 0.008, 0.08, 0.2];
+{Dimensions[trajectory\[Delta]p0005], Dimensions[trajectory\[Delta]p001], Dimensions[trajectory\[Delta]p01], Dimensions[trajectory\[Delta]p1]}
 
 
-{Dimensions[trajectory\[Delta]p0005], Dimensions[trajectory\[Delta]p001], Dimensions[trajectory\[Delta]p01], Dimensions[trajectory\[Delta]p08]}
+Clear[trajectory\[Delta]p0005, trajectory\[Delta]p001, trajectory\[Delta]p01, trajectory\[Delta]p05, trajectory\[Delta]p1]
 
 
-Clear[trajectory\[Delta]p0005, trajectory\[Delta]p001, trajectory\[Delta]p01, trajectory\[Delta]p05, trajectory\[Delta]p08]
-
-
-Show[ListPlot[distsToTarget[#, targets[[3]], 0.8]& /@ {trajectory\[Delta]p0005, trajectory\[Delta]p001, trajectory\[Delta]p01, trajectory\[Delta]p08[[2090;;]]}, 
+Show[ListPlot[distsToTarget[#, targets[[3]], 0.8]& /@ {trajectory\[Delta]p0005[[4;;]], trajectory\[Delta]p001[[4;;]], trajectory\[Delta]p01[[60;;]], trajectory\[Delta]p1[[41305;;]]}, 
 			  Joined->True,
-			  PlotRange->{{6,15}, {0.0025, 0.01}},
-			  PlotLegends->LineLegend[MaTeX[{0.0005, 0.001, 0.01, 0.08}], LegendLabel->MaTeX["\\delta"]],
+			  Mesh->Full,
+			  PlotRange->Automatic,
+			  PlotLegends->LineLegend[MaTeX[{0.0005, 0.001, 0.01, 0.1}], LegendLabel->MaTeX["\\delta"]],
 			  PlotTheme->"Scientific",
-			  FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics}"}]], 
-Plot[0.008, {x,0,20}, PlotStyle->Directive[Red, Dashed, Thickness[0.001]]]]
+			  FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]], 
+Plot[0.008, {x,0,35}, PlotStyle->Directive[Red, Dashed, Thickness[0.001]]]]
+
+
+Export["trajectories_for_diff_deltas.pdf", %333]
 
 
 Show[visualizeBipartiteSystem[{trajectory\[Delta]p0005[[-1]]}, {Pink, Yellow}], 
@@ -504,7 +509,7 @@ ParametricPlot3D[{Cos[t], Sin[t], 0}, {t, 0, 2 Pi}]]
 Show[ListPlot[{distsToTarget[trajectory\[Delta]p08[[2090;;]], targets[[3]], 0.8], distsToTarget[trajectory\[Delta]p0005, targets[[3]], 0.8]}, Joined->True], Plot[0.008, {x,0,2000}, PlotStyle->Directive[Red, Dashed]]]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Tiempos de ejecuci\[OAcute]n para algunas deltas*)
 
 

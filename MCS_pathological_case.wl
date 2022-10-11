@@ -10,7 +10,7 @@
 
 Needs["Quantum`"]
 Needs["MaTeX`"]
-Get["/media/storage/ciencia/investigacion/proyecto-ss/adanerick/codigo/CoolTools.m"]
+Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/CoolTools2.m"]
 Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/usefulFunctions.wl"]
 
 
@@ -113,7 +113,7 @@ Grid[{Join[brutalMegaSampleCylPlots1, {Text["N = 34 800"]}],
 }]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Histogramas cartesianos*)
 
 
@@ -140,17 +140,12 @@ zACompsBRsample = Map[#[[1,3]]&, bvsBRsample];
 zBCompsBRsample = Map[#[[2,3]]&, bvsBRsample];
 
 
-Length[zACompsMCSsample]
-
-
-binningMethod[bins_, counts_]:= counts/100000;
-
-
 Histogram[{zACompsBRsample, zACompsMCSsample}, Automatic, "Probability",
 		  ChartLegends->MaTeX[{"\\text{Brutal}", "\\text{MC}"}],
-		  ChartStyle->{RGBColor[1,0.67,0.77], RGBColor[1,0,0]}, 
+		  ChartStyle->{Directive[Hue[0.11,0.9,0.85], Opacity[0.6],EdgeForm[{Thickness[0.007], Hue[0.11,0.9,0.85]}]], 
+		              Directive[Darker[Red, 0.2], Opacity[0.3],EdgeForm[{Thickness[0.003], Darker[Red,0.2]}]]}, 
 		  PlotTheme->"Scientific", 
-		  FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Densidad normalizada}"}],
+		  FrameLabel->MaTeX[{"r_z^{(A)}", "\\text{Fracci\[OAcute]n de estados}"}, Preamble->{"\\usepackage{newtxmath}"}],
 		   Epilog -> Inset[Framed[Grid[{{Item[MaTeX["\\text{Promedios}"], Alignment->Center], SpanFromLeft},
                                        MaTeX[{"\\text{Brutal:} ", Mean[zACompsBRsample]}],
                                        MaTeX[{"\\text{MC:} ", Mean[zACompsMCSsample]}]},
@@ -158,14 +153,15 @@ Histogram[{zACompsBRsample, zACompsMCSsample}, Automatic, "Probability",
                                        {Right, Top},{Right,Top}], GridLines->Automatic]
 
 
-Export["histRZA_Rp8Pp8.pdf",%172]
+Export["histRZA_Rp8Pp8.pdf",%41]
 
 
 Histogram[{zBCompsBRsample, zBCompsMCSsample}, Automatic, "Probability",
 		  ChartLegends->MaTeX[{"\\text{Brutal}", "\\text{MC}"}], 
-		  ChartStyle->{Yellow, Green},
+		  ChartStyle->{Directive[Hue[0.58,1.,0.66], Opacity[0.7],EdgeForm[{Thickness[0.007], Hue[0.58,1,0.66]}]], 
+		              Directive[Darker[Green,0.1], Opacity[0.3], EdgeForm[{Thickness[0.005], Darker[Green,0.1]}]]},
 		  PlotTheme->"Scientific", 
-		  FrameLabel->MaTeX[{"r_z^{(B)}", "\\text{Densidad normalizada}"}],
+		  FrameLabel->MaTeX[{"r_z^{(B)}", "\\text{Fracci\[OAcute]n de estados}"}, Preamble->{"\\usepackage{newtxmath}"}],
 		   Epilog -> Inset[Framed[Grid[{{Item[MaTeX["\\text{Promedios}"], Alignment->Center], SpanFromLeft},
                                        MaTeX[{"\\text{Brutal:} ", Mean[zBCompsBRsample]}],
                                        MaTeX[{"\\text{MC:} ", Mean[zBCompsMCSsample]}]},
@@ -173,7 +169,7 @@ Histogram[{zBCompsBRsample, zBCompsMCSsample}, Automatic, "Probability",
                                        Scaled[{0,1}],{Left,Top}], GridLines->Automatic]
 
 
-Export["histRZB_Rp8Pp8.pdf",%170]
+Export["histRZB_Rp8Pp8.pdf",%61]
 
 
 Grid[{{Histogram[xACompsMCSsample, 50, PlotTheme->"Detailed", PlotLabel->"Componentes \!\(\*SuperscriptBox[SubscriptBox[\(r\), \(x\)], \(A\)]\) para el MCS", FrameLabel->{"\!\(\*SuperscriptBox[SubscriptBox[\(r\), \(x\)], \(A\)]\)", "Frecuencia"}, 
@@ -263,7 +259,7 @@ exactAvgBVs = partialtarcesBV[swapGate . \[Rho]averageTwoQubitsbasiscomp[0.2, 0.
 (*Hemos visto que aunque se cambie N, los picos del MCS aparecen en el mismo lugar. Creo que los picos aparecen por que son la "orilla" de la regi\[OAcute]n de inter\[EAcute]s \[CapitalOmega]. As\[IAcute], si cambiamos el valor del error (ancho de \[CapitalOmega]), me imagino que cambiar\[AAcute] la posici\[OAcute]n de los picos... Veamos.*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Importando datos para esta secci\[OAcute]n*)
 
 
@@ -316,9 +312,7 @@ samplesDiffErrors\[Delta]p001 = {
 	mcsSampleEp02\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.02_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
 	mcsSampleEp03\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.03_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
 	mcsSampleEp06\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.06_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
-	mcsSampleEp1\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.1_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]],1],
-	mcsSampleEp2\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.2_delta=0.001_t=0.3_rz=0.8_p=0.8_ "<>ToString[#]<>" . wl"][[2]]&, Range[5]], 1],
-	mcsSampleEp02\[Delta]p001 = Flat\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.008_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
+	mcsSampleEp1\[Delta]p001 = Flatten[Map[Ge\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.008_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp02\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.02_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp03\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.03_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
 	mcsSampleEp06\[Delta]p001 = Flatten[Map[Get["distintasEnes_Rp8Pp8/delta_p001/sampleMCS_n=6000_err=0.06_delta=0.001_t=0.3_rz=0.8_p=0.8_"<>ToString[#]<>".wl"][[2]]&, Range[5]],1],
