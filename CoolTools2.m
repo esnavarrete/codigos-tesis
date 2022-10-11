@@ -411,24 +411,25 @@ Module[{cylindricalBVs = toCylindricalCoordinates[#, {0,0,1}, {0,0,rz}]& /@ Tran
 	             {data, bins, Xranges, Rest[axesLabels]}]
 ];
 
-noFillingHistogram[hlist_, axesLabels_, color_:RGBColor[1, 0.8, 0.5]]:=
+noFillingHistogram[hlist_, axesLabels_, color_:RGBColor[1, 0.8, 0.5], Xrange_:Full]:=
 Graphics[{FaceForm[None], EdgeForm[{color, Thickness[0.005]}],
            Polygon[Transpose[{Riffle[#,#]&@hlist[[1]], ArrayPad[Riffle[#,#]&@hlist[[2]],1]}]]},
          AspectRatio -> 1/GoldenRatio, Frame -> True,
-         PlotRangePadding -> {{Scaled[0.02], Scaled[0.02]}, {0, Scaled[0.05]}}, 
+         PlotRange->{Xrange, Full},
+         PlotRangePadding -> {None, {0, Scaled[0.05]}},
          FrameTicksStyle->Directive[FontFamily->"Times"], FrameLabel->{axesLabels[[1]], axesLabels[[2]]}, FrameStyle->Black, 
          GridLines->Automatic, GridLinesStyle->Directive[Gray, Dotted]
 ];
 
-tripleCylindricalPlotNoFilling[sample_, rz_, colors_:{Red,Green}, bins_:{Automatic, Automatic, Automatic}]:=
+tripleCylindricalPlotNoFilling[sample_, rz_, colors_:{Red,Green}, Xranges_:{Full,Full,Full},bins_:{Automatic, Automatic, Automatic}]:=
 Module[{cylindricalBVs = toCylindricalCoordinates[#, {0,0,1}, {0,0,rz}]& /@ Transpose[partialtarcesBV[#]&/@sample],
 		axesLabels = MaTeX[{"\\text{Fracci\[OAcute]n de estados}", "r", "\\theta", "z"}, Preamble->{"\\usepackage{newtxmath}"}], 
 		data, hlists, auxFunction},
 		auxFunction[bspec_, datapair_]:= (HistogramList[#, bspec, "Probability"]& /@ datapair);
 		data = Outer[Transpose[#2][[#1]]&, Range[3], cylindricalBVs, 1];
 		hlists = MapThread[auxFunction[#1, #2]&, {bins, data}];
-		MapThread[Show[noFillingHistogram[#1[[1]], {#2, axesLabels[[1]]}, colors[[1]]], noFillingHistogram[#1[[2]], {#2, axesLabels[[1]]}, colors[[2]]]]&, 
-				  {hlists, Rest[axesLabels]}]
+		MapThread[Show[noFillingHistogram[#1[[1]], {#2, axesLabels[[1]]}, colors[[1]], #3], noFillingHistogram[#1[[2]], {#2, axesLabels[[1]]}, colors[[2]], #3]]&, 
+				  {hlists, Rest[axesLabels], Xranges}]
 ];
 
 RadiusAsFunctionOfLagrange[l_,p_]:=Sum[p[[k]]*Tanh[p[[k]]*l],{k,1,Length[p]}];
