@@ -10,6 +10,7 @@ distsToTarget::usage="Args: sample, targetstate, swapP. Calculates the Frobenius
 cleanSample::usage="Args: [sample, rz, swapP, error]. Returns a sample without the states that doesn't fall into the error region."
 testDistribution::usage="Args: \[Beta], targetstate, state, swapP. Calculates the value of the probability distribution of our MH implementation corresponding to \[Beta] and the given target state, at the point 'state'."
 metropolisHastingsSample::usage="Args: size, \[Beta], \[Delta], swapP, initialstate, targetstate. Runs our implementation of Metropolis-Hastings algorithm with parameters 'size', \[Beta] and \[Delta]; starting from 'initialstate' and trying to reach the region of 'targetstate' with CG swapP."
+metropolisHastingsSampleGOOD::usage="Args:[size, \[Beta], \[Delta], swapP, initialstate, targetstate]. Runs out implementation of MH algorithm CORRECTLY."
 metropolisHastingsSampleTest::usage="Args: size, initialstate, params. Same as metropolisHastingsSample, just gathers all the parameters \[Beta], \[Delta], swapP and targetstate into a simgle variable."
 universalInitState::usage="The 2-qubit state used as initial state for all MH Great Tests so far."
 initStateGenerator::usage="Args: \[Beta], \[Delta], swapP, targetstate, error. It runs MH algorithm until the error is less than 'error'. Then it returns the last state found. This state can then be used as initial state for MH."
@@ -41,6 +42,19 @@ metropolisHastingsSample[size_,\[Beta]_,\[Delta]_,swapP_,initialstate_,targetsta
 	];
 	Return[statelist]
 	];
+	
+metropolisHastingsSampleGOOD[size_,\[Beta]_,\[Delta]_,swapP_,initialstate_,targetstate_]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}, acceptances = 0},
+	While[n < size,
+		U = randomSmallEvolution[4,\[Delta]];
+		Y = U . X . ConjugateTranspose[U];
+		\[Alpha] = Min[testDistribution[\[Beta],targetstate,Y,swapP]/testDistribution[\[Beta],targetstate,X,swapP],1];
+		X = RandomChoice[{\[Alpha], 1 - \[Alpha]}->{Y,X}];
+		If[X == Y, acceptances++];
+		AppendTo[statelist, X];
+		n++
+	];
+	Return[{statelist, acceptances/size}]];	
+	
 metropolisHastingsSampleTest[size_, initialstate_, params_List]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}},
 	While[n < size,
 		(*Y = ketsToDensity[randomKets[4,1]][[1]];*)
