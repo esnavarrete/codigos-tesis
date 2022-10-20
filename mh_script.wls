@@ -24,7 +24,7 @@ runAndExportMH[N_, \[Beta]_, \[Delta]_, swapP_, rz_]:= With[{targetstate = (Iden
 									 		 ]
 
 
-ParallelTable[runAndExport[ene, i, j, k, l], {i,betas}, {j,deltas}, {k,swapPs}, {l,rzs}, DistributedContexts->All]
+ParallelTable[runAndExportMH[ene, i, j, k, l], {i,betas}, {j,deltas}, {k,swapPs}, {l,rzs}, DistributedContexts->All]
 
 
 (*betasDeltasCombs = Flatten[Outer[{#1, #2}&, betas, deltas], 1];*)
