@@ -12,7 +12,7 @@ Get["/media/storage/ciencia/investigacion/proyecto-ss/adanerick/codigo/CoolTools
 Get["/media/storage/ciencia/investigacion/tesis/codigos/usefulFunctions.wl"]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Importando datos de tiempos de c\[OAcute]mputo*)
 
 
@@ -29,6 +29,9 @@ exeTimesRp5Pp3\[Beta]250 = Get["exeTimes_Rp5Pp3_beta=250_alldeltas.wl"];
 exeTimesRp5Pp3\[Beta]400 = Get["exeTimes_Rp5Pp3_beta=400_alldeltas.wl"];
 exeTimesRp5Pp3\[Beta]500 = Get["exeTimes_Rp5Pp3_beta=500_alldeltas.wl"];
 exeTimesRp5Pp3\[Beta]1000 = Get["exeTimes_Rp5Pp3_beta=1000_alldeltas.wl"]; (*tiene pedos: la parte 5 s\[OAcute]lo tiene 8 datos. Por eso sale el error Part::partd*)
+
+
+exeTimesRp5Pp3\[Beta]100
 
 
 (* ::Section:: *)
@@ -88,10 +91,24 @@ enes
 
 
 (*Datos obtenidos por inspecci\[OAcute]n:*)
-data\[Delta]Nmin = {{0.01, 305027}, {0.02, 95347}, {0.03, 54973}, {0.04, 25509}, {0.05, 23084}};
+(*data\[Delta]Nmin = {{0.01, 305027}, {0.02, 95347}, {0.03, 54973}, {0.04, 25509}, {0.05, 23084}};*)
+(*data\[Delta]Nmin = MapThread[{#1, #2}&, {deltas, {300000, 60000, 40000, 20000, 20000}}];*)
+data\[Delta]Nmin = MapThread[{#1,#2}&, {deltas, {305027, 77195, 36563, 21546, 12747}}];
 
 
-ListLogLogPlot[data\[Delta]Nmin, PlotTheme->"Detailed", FrameLabel->{"\[Delta]", "\!\(\*SubscriptBox[\(N\), \(min\)]\)"}, PlotLabel->"N\[UAcute]mero m\[IAcute]n. de iteraciones para alcanzar ergodicidad \[OAcute]ptima"]
+fitNmin = LinearModelFit[Log@data\[Delta]Nmin, x,x]
+
+
+fitNmin["ANOVATable"]
+
+
+Show[ListLogLogPlot[data\[Delta]Nmin, PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\text{Paso}\\,\\,(\\delta)", "N_\\text{cr\[IAcute]tico}"}, Preamble->{"\\usepackage{newtxmath}"}],
+			   GridLines->Automatic,
+			   PlotStyle->PointSize[0.016]],
+	 LogLogPlot[Exp[3.67] x^(-1.94), {x,0,0.05}, PlotStyle->Thickness[0.004]]]
+
+
+Export["criticalNvsDelta_Rp5Pp3.pdf", %282]
 
 
 (* ::Text:: *)
