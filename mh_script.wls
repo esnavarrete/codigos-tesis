@@ -5,7 +5,7 @@ Get["/home/enavarrete/libs/CoolTools.m"]
 Get["/home/enavarrete/libs/usefulFunctions.wl"]
 
 
-SetDirectory["/home/enavarrete/mh_samples_GOOD/distintas_Nbetasydeltas_Rp5Pp3"]
+SetDirectory["/home/enavarrete/mh_samples_GOOD/distintas_Nbetasydeltas_Rp8Pp8"]
 
 
 deltas = {0.001, 0.005, 0.01, 0.03, 0.05};
