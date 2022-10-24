@@ -5,17 +5,14 @@ Get["/home/enavarrete/libs/CoolTools.m"]
 Get["/home/enavarrete/libs/usefulFunctions.wl"]
 
 
-SetDirectory["/home/enavarrete/mh_samples_GOOD/distintas_Nbetasydeltas_Rp8Pp8"]
+SetDirectory["/home/enavarrete/mh_samples_GOOD/distintas_Nbetasydeltas_Rp5Pp3_DOS"]
 
 
-deltas = {0.001, 0.005, 0.01, 0.03, 0.05};
+deltas = {0.005, 0.01, 0.03, 0.05, 0.07, 0.1};
 betas = {100, 250, 400, 600, 750, 1000};
 enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000};
 rz = 0.5;
 swapP = 0.3;
-
-
-?initStateGenerator
 
 
 runAndExportMH[N_, \[Beta]_, \[Delta]_, swapP_, rz_]:= With[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2},
