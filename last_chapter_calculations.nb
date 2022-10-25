@@ -1,0 +1,189 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6200,        181]
+NotebookOptionsPosition[      4887,        150]
+NotebookOutlinePosition[      5282,        166]
+CellTagsIndexPosition[      5239,        163]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+An\[AAcute]lisis de estados promedio  bi y tripartitos (\[UAcute]ltimo cap\
+\[IAcute]tulo)\
+\>", "Title",
+ CellChangeTimes->{{3.875707013748321*^9, 
+  3.8757070514424553`*^9}},ExpressionUUID->"19e12c31-0e59-45fe-b706-\
+b6a7504706be"],
+
+Cell["\<\
+Aqu\[IAcute] se har\[AAcute]n los c\[AAcute]lculos del \[UAcute]ltimo cap\
+\[IAcute]tulo. Para varios estados promedio (generados con el algoritmo MH) \
+se les calcular\[AAcute] la pureza, coherencias y entrelazamiento\
+\>", "Text",
+ CellChangeTimes->{{3.875707034927421*^9, 
+  3.875707081894167*^9}},ExpressionUUID->"7d0b2af1-e2c1-4a65-90b5-\
+ebebd9aa710b"],
+
+Cell[BoxData[{
+ RowBox[{"Get", "[", 
+  "\"\</media/storage/ciencia/investigacion/tesis/codigos-tesis/CoolTools2.m\>\
+\"", "]"}], "\n", 
+ RowBox[{"Get", "[", 
+  "\"\</media/storage/ciencia/investigacion/tesis/codigos-tesis/\
+usefulFunctions.wl\>\"", "]"}], "\n", 
+ RowBox[{"<<", "\"\<Quantum`\>\""}]}], "Code",
+ CellChangeTimes->{{3.875707085524065*^9, 3.875707117680765*^9}, {
+  3.875707249276173*^9, 3.8757072709942093`*^9}},
+ CellLabel->"In[28]:=",ExpressionUUID->"bdf0d997-64d8-433b-86a9-13f7a06a3ea9"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"rzs", " ", "=", " ", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"0.1", " ", "i"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", " ", "0", ",", " ", "10"}], "}"}]}], "]"}]}], ";"}], 
+  "\n", 
+  RowBox[{"(*", 
+   RowBox[{"par\[AAcute]metros", " ", "bipartitos"}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"swapPs", " ", "=", " ", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"0.1", " ", "i"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", " ", "0", ",", " ", "10"}], "}"}]}], "]"}]}], 
+  ";"}]}], "Code",
+ CellChangeTimes->{{3.875707129572382*^9, 3.8757072084837646`*^9}},
+ CellLabel->"In[23]:=",ExpressionUUID->"953995b7-cf33-49bd-bd51-0a1e380a94d1"],
+
+Cell[CellGroupData[{
+
+Cell["Pureza", "Section",
+ CellChangeTimes->{{3.875707243382475*^9, 3.875707245929819*^9}, {
+  3.875707309045911*^9, 3.875707314161318*^9}, {3.875707412907741*^9, 
+  3.8757074410290813`*^9}},ExpressionUUID->"9fdc8478-0e0b-488b-8c53-\
+23d81f9664d0"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Purity", "[", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"IdentityMatrix", "[", "8", "]"}], ")"}], "/", "8"}], 
+  "]"}]], "Code",
+ CellChangeTimes->{{3.875711472495577*^9, 3.8757114922156773`*^9}, {
+  3.875711671517894*^9, 3.875711673394101*^9}},
+ CellLabel->"In[54]:=",ExpressionUUID->"9c7e2c9f-a32f-4edd-8a21-ef2070cb5a8d"],
+
+Cell[BoxData[
+ FractionBox["1", "8"]], "Output",
+ CellChangeTimes->{{3.875711481258835*^9, 3.875711492588533*^9}, 
+   3.875711673652772*^9},
+ CellLabel->"Out[54]=",ExpressionUUID->"abc57b93-e33d-4ba1-8930-39100243fa26"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Coherencias", "Section",
+ CellChangeTimes->{{3.875707444103772*^9, 
+  3.87570744645826*^9}},ExpressionUUID->"83464070-e28f-4ed5-877c-\
+3f0c7d1cfa2c"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetAttributes", "[", 
+   RowBox[{"coherencesVector", ",", " ", "HoldFirst"}], "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"coherencesVector", "[", "rho_", "]"}], ":=", " ", 
+   RowBox[{"Join", " ", "@@", " ", 
+    RowBox[{"Array", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"rho", "[", 
+        RowBox[{"[", 
+         RowBox[{"#", ",", " ", 
+          RowBox[{
+           RowBox[{"#", " ", "+", " ", "1"}], " ", ";;"}]}], "]"}], "]"}], 
+       "&"}], ",", " ", 
+      RowBox[{
+       RowBox[{"Length", "[", "rho", "]"}], " ", "-", " ", "1"}]}], "]"}]}]}],
+   ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"coherenceMeasure", "[", "rho_", "]"}], ":=", " ", 
+   RowBox[{
+    RowBox[{"Norm", "[", 
+     RowBox[{"coherencesVector", "[", "rho", "]"}], "]"}], "^", "2"}]}], 
+  ";"}]}], "Code",
+ CellChangeTimes->{{3.875707485265847*^9, 3.875707493166233*^9}, {
+   3.875707606954862*^9, 3.875707614881905*^9}, 3.875710463193972*^9, {
+   3.875710595396656*^9, 3.875710621177902*^9}, 3.875710746232605*^9, {
+   3.87571127206229*^9, 3.8757112727761717`*^9}, 
+   3.875711321574888*^9},ExpressionUUID->"f4c2f0e9-7c16-4237-83e6-\
+3d4436a89b4b"]
+}, Open  ]],
+
+Cell["Entrelazamiento", "Section",
+ CellChangeTimes->{{3.875707448826056*^9, 
+  3.875707450951487*^9}},ExpressionUUID->"2e54ff8b-48e8-4b4e-b75c-\
+dd855f6d15cd"]
+}, Open  ]]
+},
+WindowSize->{1389, 762},
+WindowMargins->{{Automatic, 0}, {0, Automatic}},
+FrontEndVersion->"13.1 para Linux x86 (64-bit) (June 16, 2022)",
+StyleDefinitions->"ReverseColor.nb",
+ExpressionUUID->"2823c1b4-1e1c-4c4e-9bc7-f3a6b9b4839b"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 243, 6, 98, "Title",ExpressionUUID->"19e12c31-0e59-45fe-b706-b6a7504706be"],
+Cell[826, 30, 368, 7, 32, "Text",ExpressionUUID->"7d0b2af1-e2c1-4a65-90b5-ebebd9aa710b"],
+Cell[1197, 39, 505, 10, 92, "Code",ExpressionUUID->"bdf0d997-64d8-433b-86a9-13f7a06a3ea9"],
+Cell[1705, 51, 734, 21, 95, "Code",ExpressionUUID->"953995b7-cf33-49bd-bd51-0a1e380a94d1"],
+Cell[CellGroupData[{
+Cell[2464, 76, 248, 4, 68, "Section",ExpressionUUID->"9fdc8478-0e0b-488b-8c53-23d81f9664d0"],
+Cell[CellGroupData[{
+Cell[2737, 84, 347, 8, 51, "Code",ExpressionUUID->"9c7e2c9f-a32f-4edd-8a21-ef2070cb5a8d"],
+Cell[3087, 94, 219, 4, 48, "Output",ExpressionUUID->"abc57b93-e33d-4ba1-8930-39100243fa26"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3355, 104, 155, 3, 68, "Section",ExpressionUUID->"83464070-e28f-4ed5-877c-3f0c7d1cfa2c"],
+Cell[3513, 109, 1183, 32, 95, "Code",ExpressionUUID->"f4c2f0e9-7c16-4237-83e6-3d4436a89b4b"]
+}, Open  ]],
+Cell[4711, 144, 160, 3, 68, "Section",ExpressionUUID->"2e54ff8b-48e8-4b4e-b75c-dd855f6d15cd"]
+}, Open  ]]
+}
+]
+*)
+
