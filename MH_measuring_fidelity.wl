@@ -51,7 +51,7 @@ fids\[Delta]5 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]5, {2}];
 fids\[Delta]6 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]6, {2}];
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Fidelidad en funci\[OAcute]n de N*)
 
 
@@ -165,4 +165,38 @@ colors=(("DefaultPlotStyle"/.(Method /.
 Grid[{fidelityVSdeltaPlots[[1;;2]]~Join~{LineLegend[colors, enes]},
 	  fidelityVSdeltaPlots[[3;;4]],
 	  fidelityVSdeltaPlots[[5;;]]
+}, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
+
+
+(* ::Section:: *)
+(*Tasa de aceptaci\[OAcute]n vs fidelidad*)
+
+
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/distintas_Nbetasydeltas_Rp5Pp3_DOS/accrates"]
+
+
+accRates\[Beta]1 = N[Get["accRates_beta=100_allDeltas_allN_rz=0.5_p=0.3.wl"][[10]]];
+accRates\[Beta]2 = N[Get["accRates_beta=250_allDeltas_allN_rz=0.5_p=0.3.wl"][[10]]];
+accRates\[Beta]3 = N[Get["accRates_beta=400_allDeltas_allN_rz=0.5_p=0.3.wl"][[10]]];
+accRates\[Beta]4 = N[Get["accRates_beta=600_allDeltas_allN_rz=0.5_p=0.3.wl"][[10]]];
+accRates\[Beta]5 = N[Get["accRates_beta=750_allDeltas_allN_rz=0.5_p=0.3.wl"][[10]]];
+accRates\[Beta]6 = N[Get["accRates_beta=1000_allDeltas_allN_rz=0.5_p=0.3.wl"][[10]]];
+
+
+accRatesData\[Beta]1 = Map[MapThread[{#1, #2}&, {accRates\[Beta]1, #}]&, fids\[Beta]1];
+accRatesData\[Beta]2 = Map[MapThread[{#1, #2}&, {accRates\[Beta]2, #}]&, fids\[Beta]2];
+accRatesData\[Beta]3 = Map[MapThread[{#1, #2}&, {accRates\[Beta]3, #}]&, fids\[Beta]3];
+accRatesData\[Beta]4 = Map[MapThread[{#1, #2}&, {accRates\[Beta]4, #}]&, fids\[Beta]4];
+accRatesData\[Beta]5 = Map[MapThread[{#1, #2}&, {accRates\[Beta]5, #}]&, fids\[Beta]5];
+accRatesData\[Beta]6 = Map[MapThread[{#1, #2}&, {accRates\[Beta]6, #}]&, fids\[Beta]6];
+
+
+fidVSratePlots = MapThread[ListLogLogPlot[#1, PlotLabel->"\[Beta] = "<>ToString[#2], PlotTheme->"Scientific", GridLines->Automatic,
+									FrameLabel->{"Tasa de aceptaci\[OAcute]n", "1-F"}, Joined->True, Mesh->All]&, 
+		                  {{accRatesData\[Beta]1, accRatesData\[Beta]2, accRatesData\[Beta]3, accRatesData\[Beta]4, accRatesData\[Beta]5, accRatesData\[Beta]6}, betas}];
+
+
+Grid[{fidVSratePlots[[1;;2]]~Join~{PointLegend[colors, enes]},
+	  fidVSratePlots[[3;;4]],
+	  fidVSratePlots[[5;;]]
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
