@@ -165,7 +165,7 @@ Table[KroneckerProduct[PauliMatrix[1],PauliMatrix[k-6]],{k,7,9}],
 Table[KroneckerProduct[PauliMatrix[2],PauliMatrix[k-9]],{k,10,12}],
 Table[KroneckerProduct[PauliMatrix[3],PauliMatrix[k-12]],{k,13,15}]
 ]/Sqrt[2];
-randomSmallEvolution[n_Integer,epsilon_?((0<#<1)&)]:=MatrixExp[-I*epsilon*RandomVariate[GaussianUnitaryMatrixDistribution[n]]]
+randomSmallEvolution[n_Integer,epsilon_]:=MatrixExp[-I*epsilon*RandomVariate[GaussianUnitaryMatrixDistribution[n]]]
 thermalMinimizationStep[{initialstate_?MatrixQ,targetstate_?MatrixQ}/;Dimensions[initialstate]==Dimensions[targetstate],timestep_?((0<#<1)&),temperature_?((0<#<1)&),norm_:Norm]:=With[{evolution=randomSmallEvolution[Dimensions[initialstate][[1]],timestep]},With[{newstate=Chop[evolution . initialstate . ConjugateTranspose[evolution]]},If[norm[targetstate-newstate]<norm[targetstate-initialstate],newstate,RandomChoice[{temperature,(1-temperature)}->{newstate,initialstate}]]]]
 thermalMinimizationList[{initialstate_?MatrixQ,targetstate_?MatrixQ}/;Dimensions[initialstate]==Dimensions[targetstate],tolerance_?((0<#<1)&),timestep_?((0<#<1)&),temperature_?((0<#<1)&),norm_:Norm]:=NestWhileList[thermalMinimizationStep[{#,targetstate},timestep,temperature,norm]&,initialstate,(norm[#-targetstate]>tolerance)&];
 thermalMinimization[{initialstate_?MatrixQ,targetstate_?MatrixQ}/;Dimensions[initialstate]==Dimensions[targetstate],tolerance_?((0<#<1)&),timestep_?((0<#<1)&),temperature_?((0<#<1)&),norm_:Norm]:=NestWhile[thermalMinimizationStep[{#,targetstate},timestep,temperature,norm]&,initialstate,(norm[#-targetstate]>tolerance)&];
