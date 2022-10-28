@@ -5,133 +5,164 @@
 
 
 (* ::Text:: *)
-(*Hasta ahora hemos tratado de optimizar los valores de los par\[AAcute]metros \[Beta], \[Delta] y N de tal manera que arrojen el menor tiempo de c\[OAcute]mputo posible con la restricci\[OAcute]n sobre la ergodicidad. Pero, \[DownQuestion]qu\[EAcute] pasa si en vez de la ergodicidad, usamos la fidelidad entre estado promedio del MH y el estado promedio exacto?*)
+(*Hasta ahora hemos tratado de optimizar los valores de los par\[AAcute]metros \[Beta], \[Delta] y N de tal manera que arrojen el menor tiempo de c\[OAcute]mputo posible con la restricci\[OAcute]n sobre la ergodicidad. Pero, qu\[EAcute] pasa si en vez de la ergodicidad, usamos la fidelidad entre estado promedio del MH y el estado promedio exacto?*)
 
 
-Get["/media/storage/ciencia/investigacion/proyecto-ss/adanerick/codigo/CoolTools.m"]
-Get["/media/storage/ciencia/investigacion/tesis/codigos/usefulFunctions.wl"]
+Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/CoolTools2.m"]
+Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/usefulFunctions.wl"]
 
 
 (* ::Section::Closed:: *)
 (*Preliminares*)
 
 
-SetDirectory["/media/storage/ciencia/investigacion/tesis/muestras_MH/distintasN_betasydeltas_Rp5_Pp3/averages"]
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/distintas_Nbetasydeltas_Rp5Pp3_DOS/averages"]
 
 
-deltas = {0.01, 0.02, 0.03, 0.04, 0.05};
-betas = {100, 250, 400, 500, 1000};
-enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000,300000,400000,500000};
+deltas = {0.005, 0.01, 0.03, 0.05, 0.07, 0.1};
+betas = {100, 250, 400, 600, 750, 1000};
+enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000, 1000000};
 
 
 (*Funci\[OAcute]n para importar los edos promedio:*)
-getAvgStatesForASingle\[Beta][deltas_, \[Beta]_, rz_, p_]:= 
-Map[Get["avgs_delta="<>ToString[#]<>"_beta="<>ToString[\[Beta]]<>"_rz="<>ToString[rz]<>"_p="<>ToString[p]<>"_allN.wl"]&, deltas];
+getAvgStatesForASingle\[Delta][\[Delta]_, betas_, rz_, p_]:= 
+Map[Get["avgs_delta="<>ToString[\[Delta]]<>"_beta="<>ToString[#]<>"_rz="<>ToString[rz]<>"_p="<>ToString[p]<>"_allN.wl"]&, betas];
 
 
 (*Importando los edos promedio para todas las betas:*)
-avgStates\[Beta]100 = getAvgStatesForASingle\[Beta][deltas, 100, 0.5, 0.3];
-avgStates\[Beta]250 = getAvgStatesForASingle\[Beta][deltas, 250, 0.5, 0.3];
-avgStates\[Beta]400 = getAvgStatesForASingle\[Beta][deltas, 400, 0.5, 0.3];
-avgStates\[Beta]500 = getAvgStatesForASingle\[Beta][deltas, 500, 0.5, 0.3];
-avgStates\[Beta]1000 = getAvgStatesForASingle\[Beta][deltas, 1000, 0.5, 0.3];
+avgStates\[Delta]1 = getAvgStatesForASingle\[Delta][deltas[[1]], betas, 0.5, 0.3];
+avgStates\[Delta]2 = getAvgStatesForASingle\[Delta][deltas[[2]], betas, 0.5, 0.3];
+avgStates\[Delta]3 = getAvgStatesForASingle\[Delta][deltas[[3]], betas, 0.5, 0.3];
+avgStates\[Delta]4 = getAvgStatesForASingle\[Delta][deltas[[4]], betas, 0.5, 0.3];
+avgStates\[Delta]5 = getAvgStatesForASingle\[Delta][deltas[[5]], betas, 0.5, 0.3];
+avgStates\[Delta]6 = getAvgStatesForASingle\[Delta][deltas[[6]], betas, 0.5, 0.3];
 
 
-(*Estado promedio exacto correspondiente a Subscript[r, z] =0.5 y p = 0.3, par\[AAcute]metros con los que se tienen todos los datos calculados hasta el momento*)
-exactAvg = \[Rho]averageTwoQubitsbasiscomp[0.3, 0.5];
-exactAvg//MatrixForm
+(*Estado promedio brutal correspondiente a Subscript[r, z] =0.5 y p = 0.3, par\[AAcute]metros con los que se tienen todos los datos calculados hasta el momento*)
+avgRp5Pp3BRUTAL = preimageMean[ketsToDensity[Get["/media/storage/ciencia/investigacion/adanerick/muestras_de_edos/pureBrutalStates/pureHaarStates_n=10000_p=0.3_rz=0.5.m"]]];
 
 
 (*Calculando las fidelidades*)
-fids\[Beta]100 = Map[fidelity[exactAvg, #]&, avgStates\[Beta]100, {2}];
-fids\[Beta]250 = Map[fidelity[exactAvg, #]&, avgStates\[Beta]250, {2}];
-fids\[Beta]400 = Map[fidelity[exactAvg, #]&, avgStates\[Beta]400, {2}];
-fids\[Beta]500 = Map[fidelity[exactAvg, #]&, avgStates\[Beta]500, {2}];
-fids\[Beta]1000 = Map[fidelity[exactAvg, #]&, avgStates\[Beta]1000, {2}];
+fids\[Delta]1 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]1, {2}];
+fids\[Delta]2 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]2, {2}];
+fids\[Delta]3 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]3, {2}];
+fids\[Delta]4 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]4, {2}];
+fids\[Delta]5 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]5, {2}];
+fids\[Delta]6 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]6, {2}];
 
 
 (* ::Section:: *)
-(*Fidelidad en funci\[OAcute]n del n\[UAcute]mero de iteraciones*)
+(*Fidelidad en funci\[OAcute]n de N*)
 
 
 (*arranging data for fidelities*)
-fidelityData\[Beta]100 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Beta]100];
-fidelityData\[Beta]250 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Beta]250];
-fidelityData\[Beta]400 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Beta]400];
-fidelityData\[Beta]500 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Beta]500];
-fidelityData\[Beta]1000 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Beta]1000];
+fidelityData\[Delta]1 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]1];
+fidelityData\[Delta]2 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]2];
+fidelityData\[Delta]3 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]3];
+fidelityData\[Delta]4 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]4];
+fidelityData\[Delta]5 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]5];
+fidelityData\[Delta]6 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]6];
 
 
-(*the same, but for 1- fidelty*)
-oneMinusFData\[Beta]100 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityData\[Beta]100];
-oneMinusFData\[Beta]250 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityData\[Beta]250];
-oneMinusFData\[Beta]400 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityData\[Beta]400];
-oneMinusFData\[Beta]500 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityData\[Beta]500];
-oneMinusFData\[Beta]1000 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityData\[Beta]1000];
+allData = {fidelityData\[Delta]1, fidelityData\[Delta]2, fidelityData\[Delta]3 ,fidelityData\[Delta]4, fidelityData\[Delta]5, fidelityData\[Delta]6};
 
 
-allDataForNs = {fidelityData\[Beta]100, fidelityData\[Beta]250, fidelityData\[Beta]400, fidelityData\[Beta]500, fidelityData\[Beta]1000};
-allDataForNs2 = {oneMinusFData\[Beta]100, oneMinusFData\[Beta]250, oneMinusFData\[Beta]400, oneMinusFData\[Beta]500, oneMinusFData\[Beta]1000};
+fidelityVSnPlots = MapThread[Show[ListLogLogPlot[#1, PlotLabel->"\[Delta] = "<>ToString[#2], PlotLegends->betas, PlotTheme->"Scientific",
+						                      FrameLabel->{"Iteraciones", "1-F"},
+						                      Joined->True, Mesh->All, MeshStyle->PointSize[0.015], GridLines->Automatic], 
+			                      LogPlot[0,{x,0,1000000}, PlotStyle->{Red, Dashed}]]&, 
+                   {allData, deltas}];
 
 
-MapThread[Show[ListLogLogPlot[#1, PlotLabel->"\[Beta] = "<>ToString[#2], PlotLegends->deltas, PlotTheme->"Detailed",
-						 FrameLabel->{"Iteraciones", "F"},
-						 Joined->True], 
-			   LogLogPlot[1,{x,0,500000}, PlotStyle->{Red, Dashed}]]&, 
-{allDataForNs, betas}]
+Grid[{fidelityVSnPlots[[1;;2]],
+	  fidelityVSnPlots[[3;;4]],
+	  fidelityVSnPlots[[5;;]]
+}, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
 
 
-MapThread[Show[ListLogLogPlot[#1, PlotLabel->"\[Beta] = "<>ToString[#2], PlotLegends->deltas, PlotTheme->"Detailed",
-						 FrameLabel->{"Iteraciones", "1 - F"},
-						 Joined->True], 
-			   LogLogPlot[0,{x,0,500000}]]&, 
-{allDataForNs2, betas}]
+(* ::Section::Closed:: *)
+(*Ergodicidad y fidelidad*)
 
 
-(* ::Section:: *)
-(*Fidelidad en funci\[OAcute]n del tiempo de c\[OAcute]mputo*)
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/distintas_Nbetasydeltas_Rp5Pp3_DOS/minvecs"]
 
 
-SetDirectory["/media/storage/ciencia/investigacion/tesis/muestras_MH/distintasN_betasydeltas_Rp5_Pp3/execution_times"]
+(*datos de ergodicidad*)
+minVecs\[Delta]1 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.005_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]2 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.01_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]3 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.03_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]4 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.05_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]5 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.07_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]6 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.1_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 
 
-(*getting execution time data:*)
-exeTimesRp5Pp3\[Beta]100 = Get["exeTimes_Rp5Pp3_beta=100_alldeltas.wl"];
-exeTimesRp5Pp3\[Beta]250 = Get["exeTimes_Rp5Pp3_beta=250_alldeltas.wl"];
-exeTimesRp5Pp3\[Beta]400 = Get["exeTimes_Rp5Pp3_beta=400_alldeltas.wl"];
-exeTimesRp5Pp3\[Beta]500 = Get["exeTimes_Rp5Pp3_beta=500_alldeltas.wl"];
-exeTimesRp5Pp3\[Beta]1000 = Get["exeTimes_Rp5Pp3_beta=1000_alldeltas.wl"]; (*tiene pedos: la parte 5 s\[OAcute]lo tiene 8 datos. Por eso sale el error Part::partd*)
+ergs\[Delta]1 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]1];
+ergs\[Delta]2 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]2];
+ergs\[Delta]3 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]3];
+ergs\[Delta]4 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]4];
+ergs\[Delta]5 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]5];
+ergs\[Delta]6 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]6];
 
 
-(*arranging data for fidelities:*)
-fidelityDataWT\[Beta]100 = MapThread[MapThread[{#1, #2}&, {#1, #2}]&, {exeTimesRp5Pp3\[Beta]100, fids\[Beta]100}];
-fidelityDataWT\[Beta]250 = MapThread[MapThread[{#1, #2}&, {#1, #2}]&, {exeTimesRp5Pp3\[Beta]250, fids\[Beta]250}];
-fidelityDataWT\[Beta]400 = MapThread[MapThread[{#1, #2}&, {#1, #2}]&, {exeTimesRp5Pp3\[Beta]400, fids\[Beta]400}];
-fidelityDataWT\[Beta]500 = MapThread[MapThread[{#1, #2}&, {#1, #2}]&, {exeTimesRp5Pp3\[Beta]500, fids\[Beta]500}];
-fidelityDataWT\[Beta]1000 = MapThread[MapThread[{#1, #2}&, {#1, #2}]&, {exeTimesRp5Pp3\[Beta]1000, fids\[Beta]1000}];
+data\[Delta]1 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]1, fids\[Delta]1}];
+data\[Delta]2 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]2, fids\[Delta]2}];
+data\[Delta]3 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]3, fids\[Delta]3}];
+data\[Delta]4 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]4, fids\[Delta]4}];
+data\[Delta]5 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]5, fids\[Delta]5}];
+data\[Delta]6 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]6, fids\[Delta]6}];
 
 
-(*the same, but for 1- fidelity*)
-oneMinusFDataWT\[Beta]100 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityDataWT\[Beta]100];
-oneMinusFDataWT\[Beta]250 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityDataWT\[Beta]250];
-oneMinusFDataWT\[Beta]400 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityDataWT\[Beta]400];
-oneMinusFDataWT\[Beta]500 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityDataWT\[Beta]500];
-oneMinusFDataWT\[Beta]1000 = Map[MapAt[1 - # &, #, {All, 2}]&, fidelityDataWT\[Beta]1000];
+fidelityVSergPlots = MapThread[ListPlot[#1, PlotLabel->"\[Delta] = "<>ToString[#2], PlotLegends->betas, PlotTheme->"Scientific", 
+										  FrameLabel->{"Ergodicidad", "1-F"}, GridLines->Automatic, PlotRange->{{0,1}, {0,0.6}}]&,
+		  {{data\[Delta]1, data\[Delta]2, data\[Delta]3, data\[Delta]4, data\[Delta]5, data\[Delta]6}, deltas}];
 
 
-allDataForTs = {fidelityDataWT\[Beta]100, fidelityDataWT\[Beta]250, fidelityDataWT\[Beta]400, fidelityDataWT\[Beta]500, fidelityDataWT\[Beta]1000};
-allDataForTs2 = {oneMinusFDataWT\[Beta]100, oneMinusFDataWT\[Beta]250, oneMinusFDataWT\[Beta]400, oneMinusFDataWT\[Beta]500, oneMinusFDataWT\[Beta]1000};
+Grid[{fidelityVSergPlots[[1;;2]],
+	  fidelityVSergPlots[[3;;4]],
+	  fidelityVSergPlots[[5;;]]
+}, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
 
 
-MapThread[Show[ListLogLogPlot[#1, PlotLabel->"\[Beta] = "<>ToString[#2], PlotLegends->deltas, PlotTheme->"Detailed",
-							 FrameLabel->{"t [s]", "F"},
-							 Joined->True],
-			  LogLogPlot[1, {x,0,10000}, PlotStyle->{Red, Dashed}]]&, 
-{allDataForTs, betas}]
+(* ::Section::Closed:: *)
+(*Fidelidad en funci\[OAcute]n de delta*)
 
 
-MapThread[Show[ListLogLogPlot[#1, PlotLabel->"\[Beta] = "<>ToString[#2], PlotLegends->deltas, PlotTheme->"Detailed",
-							 FrameLabel->{"t [s]", "1 - F"},
-							 Joined->True],
-			  LogLogPlot[0, {x,0,10000}, PlotStyle->{Red, Dashed}]]&, 
-{allDataForTs2, betas}]
+avgStates\[Beta]1 = Map[Get["avgs_delta="<>ToString[#]<>"_beta=100_rz=0.5_p=0.3_allN.wl"]&, deltas];
+avgStates\[Beta]2 = Map[Get["avgs_delta="<>ToString[#]<>"_beta=250_rz=0.5_p=0.3_allN.wl"]&, deltas];
+avgStates\[Beta]3 = Map[Get["avgs_delta="<>ToString[#]<>"_beta=400_rz=0.5_p=0.3_allN.wl"]&, deltas];
+avgStates\[Beta]4 = Map[Get["avgs_delta="<>ToString[#]<>"_beta=600_rz=0.5_p=0.3_allN.wl"]&, deltas];
+avgStates\[Beta]5 = Map[Get["avgs_delta="<>ToString[#]<>"_beta=750_rz=0.5_p=0.3_allN.wl"]&, deltas];
+avgStates\[Beta]6 = Map[Get["avgs_delta="<>ToString[#]<>"_beta=1000_rz=0.5_p=0.3_allN.wl"]&, deltas];
+
+
+(*Calculando las fidelidades*)
+fids\[Beta]1 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Beta]1, {2}]//Transpose;
+fids\[Beta]2 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Beta]2, {2}]//Transpose;
+fids\[Beta]3 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Beta]3, {2}]//Transpose;
+fids\[Beta]4 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Beta]4, {2}]//Transpose;
+fids\[Beta]5 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Beta]5, {2}]//Transpose;
+fids\[Beta]6 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Beta]6, {2}]//Transpose;
+
+
+(*arranging data for fidelities*)
+fidelityData\[Beta]1 = Map[MapThread[{#1, #2}&, {deltas, #}]&, fids\[Beta]1];
+fidelityData\[Beta]2 = Map[MapThread[{#1, #2}&, {deltas, #}]&, fids\[Beta]2];
+fidelityData\[Beta]3 = Map[MapThread[{#1, #2}&, {deltas, #}]&, fids\[Beta]3];
+fidelityData\[Beta]4 = Map[MapThread[{#1, #2}&, {deltas, #}]&, fids\[Beta]4];
+fidelityData\[Beta]5 = Map[MapThread[{#1, #2}&, {deltas, #}]&, fids\[Beta]5];
+fidelityData\[Beta]6 = Map[MapThread[{#1, #2}&, {deltas, #}]&, fids\[Beta]6];
+
+
+fidelityVSdeltaPlots = MapThread[ListLogLogPlot[#1, PlotLabel->"\[Beta] = "<>ToString[#2], PlotTheme->"Scientific", GridLines->Automatic,
+				                          Joined->True, Mesh->All, MeshStyle->PointSize[0.015], FrameLabel->{"\[Delta]", "1-F"}, PlotRange->All]&, 
+		                        {{fidelityData\[Beta]1, fidelityData\[Beta]2, fidelityData\[Beta]3, fidelityData\[Beta]4, fidelityData\[Beta]5, fidelityData\[Beta]6}, betas}];
+
+
+colors=(("DefaultPlotStyle"/.(Method /. 
+     Charting`ResolvePlotTheme["Scientific" ,  ListLogLogPlot]))/. Directive[x_,__]:>x);
+
+
+Grid[{fidelityVSdeltaPlots[[1;;2]]~Join~{LineLegend[colors, enes]},
+	  fidelityVSdeltaPlots[[3;;4]],
+	  fidelityVSdeltaPlots[[5;;]]
+}, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
