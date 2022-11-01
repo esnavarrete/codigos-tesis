@@ -10,6 +10,7 @@
 
 Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/CoolTools2.m"]
 Get["/media/storage/ciencia/investigacion/tesis/codigos-tesis/usefulFunctions.wl"]
+<<"MaTeX`"
 
 
 (* ::Section::Closed:: *)
@@ -22,6 +23,10 @@ SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/distin
 deltas = {0.005, 0.01, 0.03, 0.05, 0.07, 0.1};
 betas = {100, 250, 400, 600, 750, 1000};
 enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000, 1000000};
+
+
+colors=(("DefaultPlotStyle"/.(Method /. 
+     Charting`ResolvePlotTheme["Scientific" ,  ListLogLogPlot]))/. Directive[x_,__]:>x)
 
 
 (*Funci\[OAcute]n para importar los edos promedio:*)
@@ -51,7 +56,7 @@ fids\[Delta]5 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]5, {2}];
 fids\[Delta]6 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]6, {2}];
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Fidelidad en funci\[OAcute]n de N*)
 
 
@@ -67,20 +72,25 @@ fidelityData\[Delta]6 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]6];
 allData = {fidelityData\[Delta]1, fidelityData\[Delta]2, fidelityData\[Delta]3 ,fidelityData\[Delta]4, fidelityData\[Delta]5, fidelityData\[Delta]6};
 
 
-fidelityVSnPlots = MapThread[Show[ListLogLogPlot[#1, PlotLabel->"\[Delta] = "<>ToString[#2], PlotLegends->betas, PlotTheme->"Scientific",
-						                      FrameLabel->{"Iteraciones", "1-F"},
-						                      Joined->True, Mesh->All, MeshStyle->PointSize[0.015], GridLines->Automatic], 
-			                      LogPlot[0,{x,0,1000000}, PlotStyle->{Red, Dashed}]]&, 
-                   {allData, deltas}];
+fidVSergLegend = LineLegend[colors, MaTeX[betas], LegendLabel->MaTeX["\\beta", Preamble->{"\\usepackage{newtxmath}"}]];
 
 
-Grid[{fidelityVSnPlots[[1;;2]],
-	  fidelityVSnPlots[[3;;4]],
-	  fidelityVSnPlots[[5;;]]
+fidelityVSnPlots = MapThread[ListLogLogPlot[#1, PlotLabel->MaTeX["\\delta = "<>ToString[#2], Preamble->{"\\usepackage{newtxmath}"}], 
+											    PlotTheme->"Scientific", Joined->True, Mesh->All, MeshStyle->PointSize[0.015], GridLines->Automatic,
+											    FrameLabel->MaTeX[{"\\text{Iteraciones}\\,\\,(N)", "1-F(\\mathcal{A}_\\text{brutal}, \\mathcal{A}_\\text{MH})"}]]&, 
+                             {allData, deltas}];
+
+
+Grid[{fidelityVSnPlots[[1;;2]]~Join~{fidVSergLegend},
+	  fidelityVSnPlots[[3;;4]]~Join~{fidVSergLegend},
+	  fidelityVSnPlots[[5;;]]~Join~{fidVSergLegend}
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
 
 
-(* ::Section::Closed:: *)
+Export["fidsVSn_Rp5Pp3.pdf", %65]
+
+
+(* ::Section:: *)
 (*Ergodicidad y fidelidad*)
 
 
@@ -90,7 +100,7 @@ SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/distin
 (*datos de ergodicidad*)
 minVecs\[Delta]1 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.005_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]2 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.01_rz=0.5_p=0.3_allN.wl"]& /@ betas;
-minVecs\[Delta]3 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.03_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]3 = Get["minVecs_beta="<>ToString[#]<>"\.b4_delta=0.03_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]4 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.05_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]5 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.07_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]6 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.1_rz=0.5_p=0.3_allN.wl"]& /@ betas;
@@ -112,8 +122,10 @@ data\[Delta]5 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]
 data\[Delta]6 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]6, fids\[Delta]6}];
 
 
-fidelityVSergPlots = MapThread[ListPlot[#1, PlotLabel->"\[Delta] = "<>ToString[#2], PlotLegends->betas, PlotTheme->"Scientific", 
-										  FrameLabel->{"Ergodicidad", "1-F"}, GridLines->Automatic, PlotRange->{{0,1}, {0,0.6}}]&,
+fidelityVSergPlots = MapThread[ListLogPlot[#1, PlotLabel->MaTeX["\\delta = "<>ToString[#2], Preamble->{"\\usepackage{newtxmath}"}], 
+										  PlotLegends->PointLegend[MaTeX[betas], LegendLabel->MaTeX["\\beta", Preamble->{"\\usepackage{newtxmath}"}]], 
+										  PlotTheme->"Scientific", GridLines->Automatic, PlotRange->{{0,1}, {0, 0.7}}, PlotStyle->PointSize[0.014],
+										  FrameLabel->{MaTeX["\\text{Antiergodicidad}\\,\\,(\\tilde{E}_1)", Preamble->{"\\usepackage{newtxmath}"}], MaTeX["1-F(\\mathcal{A}_\\text{brutal}, \\mathcal{A}_\\text{MH})"]}]&,
 		  {{data\[Delta]1, data\[Delta]2, data\[Delta]3, data\[Delta]4, data\[Delta]5, data\[Delta]6}, deltas}];
 
 
@@ -121,6 +133,9 @@ Grid[{fidelityVSergPlots[[1;;2]],
 	  fidelityVSergPlots[[3;;4]],
 	  fidelityVSergPlots[[5;;]]
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
+
+
+Export["fidVSerg_deltap03_Rp5Pp3.pdf", fidelityVSergPlots[[3]]]
 
 
 (* ::Section::Closed:: *)
@@ -168,7 +183,7 @@ Grid[{fidelityVSdeltaPlots[[1;;2]]~Join~{LineLegend[colors, enes]},
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Tasa de aceptaci\[OAcute]n vs fidelidad*)
 
 
