@@ -5,14 +5,17 @@ Get["/home/enavarrete/libs/CoolTools.m"]
 Get["/home/enavarrete/libs/usefulFunctions.wl"]
 
 
-SetDirectory["/home/enavarrete/mh_samples_GOOD/distintas_Nbetasydeltas_Rp5Pp3_DOS"]
+SetDirectory["/home/enavarrete/mh_samples_GOOD/final_samples"]
 
 
-deltas = {0.005, 0.01, 0.03, 0.05, 0.07, 0.1};
+(*deltas = {0.005, 0.01, 0.03, 0.05, 0.07, 0.1};
 betas = {100, 250, 400, 600, 750, 1000};
-enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000, 1000000};
-rz = 0.5;
-swapP = 0.3;
+enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000, 1000000};*)
+rzs = {0, 0.5, 0.8};
+swapPs = {0.3, 0.5, 0.8};
+delta = 0.05;
+beta = 100;
+ene = 200000;
 
 
 runAndExportMH[N_, \[Beta]_, \[Delta]_, swapP_, rz_]:= 
@@ -24,7 +27,7 @@ With[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2},
 		 ]]
 
 
-ParallelTable[runAndExportMH[enes[[10]], i, j, swapP, rz], {i, betas}, {j, deltas}, DistributedContexts->All]
+ParallelTable[runAndExportMH[ene, beta, delta, i, j], {i, swapPs}, {j, rzs}, DistributedContexts->All]
 
 
 (*betasDeltasCombs = Flatten[Outer[{#1, #2}&, betas, deltas], 1];*)
