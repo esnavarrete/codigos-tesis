@@ -9,9 +9,9 @@ visualizeMonopartiteSystem::usage="Args: states_List, refState_List. Plots state
 distsToTarget::usage="Args: sample, targetstate, swapP. Calculates the Frobenius distances between 'targetstate' and the image of 'states' under CG with probability 'swapP'."
 cleanSample::usage="Args: [sample, rz, swapP, error]. Returns a sample without the states that doesn't fall into the error region."
 testDistribution::usage="Args: \[Beta], targetstate, state, swapP. Calculates the value of the probability distribution of our MH implementation corresponding to \[Beta] and the given target state, at the point 'state'."
-metropolisHastingsSample::usage="Args: size, \[Beta], \[Delta], swapP, initialstate, targetstate. Runs our implementation of Metropolis-Hastings algorithm with parameters 'size', \[Beta] and \[Delta]; starting from 'initialstate' and trying to reach the region of 'targetstate' with CG swapP."
-metropolisHastingsSampleGOOD::usage="Args:[size, \[Beta], \[Delta], swapP, initialstate, targetstate]. Runs out implementation of MH algorithm CORRECTLY."
-metropolisHastingsSampleTest::usage="Args: size, initialstate, params. Same as metropolisHastingsSample, just gathers all the parameters \[Beta], \[Delta], swapP and targetstate into a simgle variable."
+testDistributionNq::usage="Args:[\[Beta], targetstate, state, pvec]. The same as testDistribution, but for an N to 1 CG. N is determined by the length of pvec."
+metropolisHastingsSampleGOOD::usage="Args:[size, \[Beta], \[Delta], swapP, initialstate, targetstate]. Runs our implementation of MH algorithm for the inverse problem with 2 qubits."
+metropolisHastingsSampleNq::usage="Args:[size, \[Beta], \[Delta], pvec, initialstate, targetstate]. Runs our implementation of MH algorithm for the inverse problem with microstates of N qubits and a macrostate of 1 qubit. N is determined by Length[pvec]; the dimension initialstate must be 8 x 8"
 universalInitState::usage="The 2-qubit state used as initial state for all MH Great Tests so far."
 initStateGenerator::usage="Args: \[Beta], \[Delta], swapP, targetstate, error. It runs MH algorithm until the error is less than 'error'. Then it returns the last state found. This state can then be used as initial state for MH."
 distancesMatrix::usage="Args: brutalRef, sample. It computes the distances matrix needed to measure ergodicity of 'sample' wrt 'brutalRef' in all our ways."
@@ -31,17 +31,7 @@ distsToTarget[sample_, targetstate_, swapP_]:= Map[Norm[coarseGraining2[#, swapP
 cleanSample[sample_, rz_, swapP_, error_]:= With[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2},
 												 Select[sample, Norm[coarseGraining2[#, swapP]-targetstate, "Frobenius"] <= error &]];
 testDistribution[beta_,targetstate_,state_,swapP_]:= Exp[-beta*Norm[coarseGraining2[state, swapP]-targetstate, "Frobenius"]];
-metropolisHastingsSample[size_,\[Beta]_,\[Delta]_,swapP_,initialstate_,targetstate_]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}},
-	While[n < size,
-		(*Y = ketsToDensity[randomKets[4,1]][[1]];*)
-		U = randomSmallEvolution[4,\[Delta]];
-		Y = U . X . ConjugateTranspose[U];
-		\[Alpha] = Min[testDistribution[\[Beta],targetstate,Y,swapP]/testDistribution[\[Beta],targetstate,X,swapP],1];
-		X = RandomChoice[{\[Alpha], 1 - \[Alpha]}->{Y,X}];
-		If[X == Y, AppendTo[statelist,X];n++]
-	];
-	Return[statelist]
-	];
+testDistributionNq[beta_, targetstate_, state_, pvec_]:= Exp[-beta*Norm[CGNto1[state, pvec]-targetstate, "Frobenius"]];
 	
 metropolisHastingsSampleGOOD[size_,\[Beta]_,\[Delta]_,swapP_,initialstate_,targetstate_]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}, acceptances = 0},
 	While[n < size,
@@ -55,21 +45,17 @@ metropolisHastingsSampleGOOD[size_,\[Beta]_,\[Delta]_,swapP_,initialstate_,targe
 	];
 	Return[{statelist, acceptances/size}]];	
 	
-metropolisHastingsSampleTest[size_, initialstate_, params_List]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}},
+metropolisHastingsSampleNq[size_, \[Beta]_, \[Delta]_, pvec_, initialstate_, targetstate_]:= Module[{n = 0, X = initialstate, Y, U, \[Alpha], statelist = {}, acceptances = 0, dim = 2^Length[pvec]},
 	While[n < size,
-		(*Y = ketsToDensity[randomKets[4,1]][[1]];*)
-		U = randomSmallEvolution[4,params[[2]]];
+		U = randomSmallEvolution[dim,\[Delta]];
 		Y = U . X . ConjugateTranspose[U];
-		\[Alpha] = Min[testDistribution[params[[1]],params[[4]],Y,params[[3]]]/testDistribution[params[[1]],params[[4]],X,params[[3]]],1];
+		\[Alpha] = Min[testDistributionNq[\[Beta],targetstate,Y, pvec]/testDistributionNq[\[Beta],targetstate,X, pvec], 1];
 		X = RandomChoice[{\[Alpha], 1 - \[Alpha]}->{Y,X}];
-		If[X == Y, AppendTo[statelist,X];n++]
+		If[X == Y, acceptances++];
+		AppendTo[statelist, X];
+		n++
 	];
-	Return[statelist]
-	];
-(*getParamsPositions[target_, swapP_]:= With[{targetstate=(IdentityMatrix[2]+target PauliMatrix[3])/2}, Position[allParams,{_,_,swapP,targetstate},1]];*)	
-(*sampleErrorStdDev[sample_List, targetstate_, swapP_]:= StandardDeviation @ Map[distToTarget[#, targetstate, swapP]&, sample];	
-sampleErrorMean[sample_List, targetstate_, swapP_]:= Mean @ Map[distToTarget[#, targetstate, swapP]&, sample];
-sampleErrorMax[sample_List, targetstate_, swapP_]:= Max @ Map[distToTarget[#, targetstate, swapP]&, sample];*)
+	Return[{statelist, acceptances/size}]];
 
 universalInitState = {{0.410917935196175 + 0.*I, 0.2272038918068731 - 0.20737674270874934*I, 
 0.2105845415848582 - 0.2023568912321056*I, 
@@ -82,7 +68,9 @@ universalInitState = {{0.410917935196175 + 0.*I, 0.2272038918068731 - 0.20737674
 -0.06931913586574238 + 0.16305163218798477*I}, 
 {0.08863081936605553 - 0.23299802818153106*I, 
 -0.06858085917908074 - 0.17355784038938035*I, 
--0.06931913586574238 - 0.16305163218798477*I, 0.15123093434291737 + 0.*I}};
+-0.06931913586574238 - 0.16305163218798477*I, 0.15123093434291737 + 0.*I}}; 
+
+universalInitState3q = {{1,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}};
 
 initStateGenerator[\[Beta]_, \[Delta]_, swapP_, targetstate_, error_]:= Module[{X = universalInitState, \[Epsilon] = Norm[coarseGraining2[universalInitState, swapP]-targetstate,"Frobenius"], Y, U, \[Alpha]},
 	While[\[Epsilon] > error,
@@ -94,6 +82,19 @@ initStateGenerator[\[Beta]_, \[Delta]_, swapP_, targetstate_, error_]:= Module[{
 	];
 	Return[X]
 ];
+
+initStateGeneratorNq[\[Beta]_, \[Delta]_, pvec_, targetstate_, error_]:= 
+Module[{X = universalInitState3q, \[Epsilon] = Norm[CGNto1[universalInitState3q, pvec]-targetstate,"Frobenius"], Y, U, \[Alpha], dim = 2^Length[pvec]},
+	While[\[Epsilon] > error,
+		U = randomSmallEvolution[dim, \[Delta]];
+		Y = U . X . ConjugateTranspose[U];
+		\[Alpha] = Min[testDistributionNq[\[Beta],targetstate,Y, pvec]/testDistributionNq[\[Beta],targetstate,X, pvec], 1];
+		X = RandomChoice[{\[Alpha], 1 - \[Alpha]}->{Y,X}];
+		If[X == Y, \[Epsilon] = Norm[CGNto1[X, pvec]-targetstate,"Frobenius"]]
+	];
+	Return[X]
+];
+
 distancesMatrix[brutalRef_, sample_]:= Outer[Norm[#1 - #2, "Frobenius"]&, brutalRef, sample, 1];
 minDistancesVector[brutalRef_, sample_]:= Min[#]& /@ distancesMatrix[brutalRef, sample];
 ergodicityMeasure2[minVector_List]:= Mean[minVector];
