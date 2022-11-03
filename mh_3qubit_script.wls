@@ -12,7 +12,7 @@ beta = 100;
 delta = 0.05;
 ene = 200000;
 rzs = {0, 0.1, 0.5, 0.8};
-ps = {1/3, 1/3, 1/3};
+pes = {1/3, 1/3, 1/3};
 
 
 runAndExportMH3q[N_, \[Beta]_, \[Delta]_, pvec_, rz_]:= 
@@ -24,4 +24,4 @@ With[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2},
 		 ]]
 
 
-ParallelTable[runAndExportMH3q[ene, beta, delta, ps, i], {i, rzs}, DistributedContexts->All]
+ParallelTable[runAndExportMH3q[ene, beta, delta, pes, i], {i, rzs}, DistributedContexts->All]
