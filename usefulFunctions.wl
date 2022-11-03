@@ -14,6 +14,7 @@ metropolisHastingsSampleGOOD::usage="Args:[size, \[Beta], \[Delta], swapP, initi
 metropolisHastingsSampleNq::usage="Args:[size, \[Beta], \[Delta], pvec, initialstate, targetstate]. Runs our implementation of MH algorithm for the inverse problem with microstates of N qubits and a macrostate of 1 qubit. N is determined by Length[pvec]; the dimension initialstate must be 8 x 8"
 universalInitState::usage="The 2-qubit state used as initial state for all MH Great Tests so far."
 initStateGenerator::usage="Args: \[Beta], \[Delta], swapP, targetstate, error. It runs MH algorithm until the error is less than 'error'. Then it returns the last state found. This state can then be used as initial state for MH."
+initStateGeneratorNq::usage="Args:[\[Beta], \[Delta], pvec, targetstate, error]. The same as initStateGenerator but for N qubit micro states."
 distancesMatrix::usage="Args: brutalRef, sample. It computes the distances matrix needed to measure ergodicity of 'sample' wrt 'brutalRef' in all our ways."
 minDistancesVector::usage="Args: brutalRef, sample. It gets the minimum values of each row of the distances matrix and arranges them in a vector."
 ergodicityMeasure2::usage="Args: minVector. Our Second ergodicity measure (formally the first). It calculates the mean of the minVector components."
