@@ -3,7 +3,7 @@
 BeginPackage["CoolTools`"]
 Needs["Carlos`"]
 Needs["Quantum`"]
-(*Needs["MaTeX`"]*)
+Needs["MaTeX`"]
 GetDataBruto::usage="Get pure states whos image is a given target state, polarized in the
 z direction GetDataBruto[{SwapProbability_, MaxError_, SampleSize_, rz_}]"
 randomKets::usage ="randomKets[dim,m] returns a list of m random kets of dimension 'dim'. The ket components are generated with the standard normal distribution."
@@ -85,7 +85,7 @@ toCylindricalCoordinates::usage="Analogous to ToSphericalCoordinates, but you ca
 tripleCylindricalPlot::usage="You know what this does, it's cool af"
 tripleCylindricalPlot2::usage="The same as tripleCylindricalPlot"
 noFillingHistogram::usage="Args:[hlist, axesLabels_List, color]. Generates a probability Histogram from the given histogram list 'hlist'. The generated histogram has no bottom color filling, just the edges."
-tripleCylindricalPlotNoFilling::usage="Args:[sample, rz, colors_List, bins_List]. The same as tripleCylindricalPlot, but the Histograms have no bottom color fillings."
+tripleCylindricalPlotNoFilling::usage="Args:[sample, rz, colors_List, Xranges_List, bins_List]. The same as tripleCylindricalPlot, but the Histograms have no bottom color fillings."
 radialCylindricalDensity::usage="You know what this does, it's cool af"
 azimuthalCylindricalDensity::usage="You know what this does, it's cool af"
 zCylindricalDensity::usage="You know what this does, it's cool af"
