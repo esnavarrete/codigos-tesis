@@ -13,6 +13,7 @@ testDistributionNq::usage="Args:[\[Beta], targetstate, state, pvec]. The same as
 metropolisHastingsSampleGOOD::usage="Args:[size, \[Beta], \[Delta], swapP, initialstate, targetstate]. Runs our implementation of MH algorithm for the inverse problem with 2 qubits."
 metropolisHastingsSampleNq::usage="Args:[size, \[Beta], \[Delta], pvec, initialstate, targetstate]. Runs our implementation of MH algorithm for the inverse problem with microstates of N qubits and a macrostate of 1 qubit. N is determined by Length[pvec]; the dimension initialstate must be 8 x 8"
 universalInitState::usage="The 2-qubit state used as initial state for all MH Great Tests so far."
+universalInitState3q::usage="The 3 qubit state |000> density matrix"
 initStateGenerator::usage="Args: \[Beta], \[Delta], swapP, targetstate, error. It runs MH algorithm until the error is less than 'error'. Then it returns the last state found. This state can then be used as initial state for MH."
 initStateGeneratorNq::usage="Args:[\[Beta], \[Delta], pvec, targetstate, error]. The same as initStateGenerator but for N qubit micro states."
 distancesMatrix::usage="Args: brutalRef, sample. It computes the distances matrix needed to measure ergodicity of 'sample' wrt 'brutalRef' in all our ways."
@@ -71,7 +72,8 @@ universalInitState = {{0.410917935196175 + 0.*I, 0.2272038918068731 - 0.20737674
 -0.06858085917908074 - 0.17355784038938035*I, 
 -0.06931913586574238 - 0.16305163218798477*I, 0.15123093434291737 + 0.*I}}; 
 
-universalInitState3q = {{1,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}};
+universalInitState3q = {{1,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}, {0,0,0,0,0,0,0,0}};
 
 initStateGenerator[\[Beta]_, \[Delta]_, swapP_, targetstate_, error_]:= Module[{X = universalInitState, \[Epsilon] = Norm[coarseGraining2[universalInitState, swapP]-targetstate,"Frobenius"], Y, U, \[Alpha]},
 	While[\[Epsilon] > error,
