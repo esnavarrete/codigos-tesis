@@ -14,7 +14,7 @@ MaxError = 0.01;
 pvecs = {{1/3, 1/3, 1/3}, {0.5, 0.25, 0.25}, {0.9, 0.05, 0.05}};
 
 
-brutalSampleNto1[rz_, sampleSize_, error_, pvec_]:= Module[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2, sample = {}, n=0, dim = Length[pvec]},
+brutalSampleNto1[rz_, sampleSize_, error_, pvec_]:= Module[{targetstate = (IdentityMatrix[2] + rz PauliMatrix[3])/2, sample = {}, n=0, dim = 2^Length[pvec]},
 	While[n < sampleSize,
 		\[Psi] = ketsToDensity[randomKets[dim, 1]][[1]];
 		distance = Norm[CGNto1[\[Psi], pvec] - targetstate, "Frobenius"];
