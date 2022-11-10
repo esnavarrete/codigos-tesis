@@ -113,7 +113,7 @@ Grid[{fidelityVSnPlots[[1;;2]]~Join~{fidVSergLegend},
 Export["fidsVSn_Rp5Pp3.pdf", %65]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Ergodicidad y fidelidad*)
 
 
@@ -252,3 +252,26 @@ Grid[{fidVSratePlots[[1;;2]]~Join~{PointLegend[colors, enes]},
 	  fidVSratePlots[[3;;4]],
 	  fidVSratePlots[[5;;]]
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
+
+
+(* ::Section:: *)
+(*Fidelidades caso tripartito*)
+
+
+(*Los brutales*)
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/final_samples_3qubits/brutals"];
+avgR0Pp33BRUTAL = preimageMean[Get["brutals_N=10000_error=0.01_rz=0_p=0.33.wl"][[2]]];
+avgRp1Pp33BRUTAL = preimageMean[Get["brutals_N=10000_error=0.01_rz=0.1_p=0.33.wl"][[2]]];
+
+
+(*Los MH*)
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/final_samples_3qubits/averages"];
+avgR0Pp33MH = Get["avgs_delta=0.05_beta=100_rz=0_p=boltzmann_allN.wl"][[1]];
+avgRp1Pp33MH = Get["avgs_delta=0.05_beta=100_rz=0.1_p=boltzmann_allN.wl"][[1]];
+
+
+fidelity[avgR0Pp33BRUTAL, avgR0Pp33MH]
+fidelity[avgRp1Pp33BRUTAL, avgRp1Pp33MH]
+
+
+MatrixForm /@ {Chop[avgR0Pp33BRUTAL], Chop[avgR0Pp33MH]}
