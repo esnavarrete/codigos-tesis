@@ -22,7 +22,7 @@ SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD/distin
 
 deltas = {0.005, 0.01, 0.03, 0.05, 0.07, 0.1, 0.5, 1, 5, 10};
 betas = {100, 250, 400, 600, 750, 1000};
-enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000}; (*, 1000000};*)
+enes = {10000, 20000, 40000, 60000, 80000, 100000, 200000, 350000, 500000, 1000000};
 
 
 colors=(("DefaultPlotStyle"/.(Method /. 
@@ -39,15 +39,12 @@ avgStates\[Delta]1 = getAvgStatesForASingle\[Delta][deltas[[1]], betas, 0.5, 0.3
 avgStates\[Delta]2 = getAvgStatesForASingle\[Delta][deltas[[2]], betas, 0.5, 0.3];
 avgStates\[Delta]3 = getAvgStatesForASingle\[Delta][deltas[[3]], betas, 0.5, 0.3];
 avgStates\[Delta]4 = getAvgStatesForASingle\[Delta][deltas[[4]], betas, 0.5, 0.3];
-avgStates\[Delta]5 = getAvgStatesForASingle\[Delta][deltas[[5]], betas, 0.5, 0.3];
+(*avgStates\[Delta]5 = getAvgStatesForASingle\[Delta][deltas[[5]], betas, 0.5, 0.3];*)
 avgStates\[Delta]6 = getAvgStatesForASingle\[Delta][deltas[[6]], betas, 0.5, 0.3];
-
-
-(*Para las segundas deltas*)
 avgStates\[Delta]7 = getAvgStatesForASingle\[Delta][deltas[[7]], betas, 0.5, 0.3];
-avgStates\[Delta]8 = getAvgStatesForASingle\[Delta][deltas[[8]], betas, 0.5, 0.3];
+(*avgStates\[Delta]8 = getAvgStatesForASingle\[Delta][deltas[[8]], betas, 0.5, 0.3];
 avgStates\[Delta]9 = getAvgStatesForASingle\[Delta][deltas[[9]], betas, 0.5, 0.3];
-avgStates\[Delta]10 = getAvgStatesForASingle\[Delta][deltas[[10]], betas, 0.5, 0.3];
+avgStates\[Delta]10 = getAvgStatesForASingle\[Delta][deltas[[10]], betas, 0.5, 0.3];*)
 
 
 (*Estado promedio brutal correspondiente a Subscript[r, z] =0.5 y p = 0.3, par\[AAcute]metros con los que se tienen todos los datos calculados hasta el momento*)
@@ -59,15 +56,12 @@ fids\[Delta]1 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]1, {2}];
 fids\[Delta]2 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]2, {2}];
 fids\[Delta]3 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]3, {2}];
 fids\[Delta]4 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]4, {2}];
-fids\[Delta]5 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]5, {2}];
+(*fids\[Delta]5 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]5, {2}];*)
 fids\[Delta]6 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]6, {2}];
-
-
-(*para las segundas deltas*)
 fids\[Delta]7 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]7, {2}];
-fids\[Delta]8 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]8, {2}];
+(*fids\[Delta]8 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]8, {2}];
 fids\[Delta]9 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]9, {2}];
-fids\[Delta]10 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]10, {2}];
+fids\[Delta]10 = Map[1-fidelity[avgRp5Pp3BRUTAL, #]&, avgStates\[Delta]10, {2}];*)
 
 
 (* ::Section:: *)
@@ -79,41 +73,39 @@ fidelityData\[Delta]1 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]1];
 fidelityData\[Delta]2 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]2];
 fidelityData\[Delta]3 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]3];
 fidelityData\[Delta]4 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]4];
-fidelityData\[Delta]5 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]5];
+(*fidelityData\[Delta]5 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]5];*)
 fidelityData\[Delta]6 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]6];
-
-
-(*para las segundas deltas*)
-fidelityData\[Delta]7 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]7];
-fidelityData\[Delta]8 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]8];
+fidelityData\[Delta]7 = Map[MapThread[{#1, #2}&, {enes[[1;;9]], #}]&, fids\[Delta]7];
+(*fidelityData\[Delta]8 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]8];
 fidelityData\[Delta]9 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]9];
-fidelityData\[Delta]10 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]10];
+fidelityData\[Delta]10 = Map[MapThread[{#1, #2}&, {enes, #}]&, fids\[Delta]10];*)
 
 
-allData = {fidelityData\[Delta]1, fidelityData\[Delta]2, fidelityData\[Delta]3 ,fidelityData\[Delta]4, fidelityData\[Delta]5, fidelityData\[Delta]6};
-
-
-allData = {fidelityData\[Delta]7, fidelityData\[Delta]8, fidelityData\[Delta]9, fidelityData\[Delta]10};
+allData = {fidelityData\[Delta]1, fidelityData\[Delta]2, fidelityData\[Delta]3 ,fidelityData\[Delta]4, fidelityData\[Delta]6, fidelityData\[Delta]7};
 
 
 fidVSergLegend = LineLegend[colors, MaTeX[betas], LegendLabel->MaTeX["\\beta", Preamble->{"\\usepackage{newtxmath}"}]];
 
 
-fidelityVSnPlots = MapThread[ListLogLogPlot[#1, PlotLabel->MaTeX["\\delta = "<>ToString[#2], Preamble->{"\\usepackage{newtxmath}"}], 
+fidelityVSnPlots = MapThread[ListLogLogPlot[#1, PlotLabel->MaTeX["\\delta = "<>ToString[#2], Preamble->{"\\usepackage{newtxmath}"}], PlotRange->{0.0001, 1},
 											    PlotTheme->"Scientific", Joined->True, Mesh->All, MeshStyle->PointSize[0.015], GridLines->Automatic,
 											    FrameLabel->MaTeX[{"\\text{Iteraciones}\\,\\,(N)", "1-F(\\mathcal{A}_\\text{brutal}, \\mathcal{A}_\\text{MH})"}]]&, 
-                             {allData, deltas[[7;;]]}];
+                             {allData, deltas[[1;;4]]~Join~deltas[[6;;7]]}];
 
 
 Grid[{fidelityVSnPlots[[1;;2]]~Join~{fidVSergLegend},
-	  fidelityVSnPlots[[3;;4]]~Join~{fidVSergLegend}
+	  fidelityVSnPlots[[3;;4]]~Join~{fidVSergLegend},
+	  fidelityVSnPlots[[5;;]]~Join~{fidVSergLegend}
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
 
 
-Export["fidsVSn_Rp5Pp3.pdf", %65]
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD"]
 
 
-(* ::Section::Closed:: *)
+Export["fidsVSn_Rp5Pp3.pdf", %94]
+
+
+(* ::Section:: *)
 (*Ergodicidad y fidelidad*)
 
 
@@ -125,51 +117,52 @@ minVecs\[Delta]1 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.005_rz=0.5_p=0.3_
 minVecs\[Delta]2 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.01_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]3 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.03_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]4 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.05_rz=0.5_p=0.3_allN.wl"]& /@ betas;
-minVecs\[Delta]5 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.07_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+(*minVecs\[Delta]5 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.07_rz=0.5_p=0.3_allN.wl"]& /@ betas;*)
 minVecs\[Delta]6 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.1_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]7 = Get["minVecs_beta="<>ToString[#]<>"_delta=0.5_rz=0.5_p=0.3_allN.wl"]& /@ betas;
-minVecs\[Delta]8 = Get["minVecs_beta="<>ToString[#]<>"_delta=1_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+(*minVecs\[Delta]8 = Get["minVecs_beta="<>ToString[#]<>"_delta=1_rz=0.5_p=0.3_allN.wl"]& /@ betas;
 minVecs\[Delta]9 = Get["minVecs_beta="<>ToString[#]<>"_delta=5_rz=0.5_p=0.3_allN.wl"]& /@ betas;
-minVecs\[Delta]10 = Get["minVecs_beta="<>ToString[#]<>"_delta=10_rz=0.5_p=0.3_allN.wl"]& /@ betas;
+minVecs\[Delta]10 = Get["minVecs_beta="<>ToString[#]<>"_delta=10_rz=0.5_p=0.3_allN.wl"]& /@ betas;*)
 
 
 ergs\[Delta]1 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]1];
 ergs\[Delta]2 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]2];
 ergs\[Delta]3 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]3];
 ergs\[Delta]4 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]4];
-ergs\[Delta]5 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]5];
+(*ergs\[Delta]5 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]5];*)
 ergs\[Delta]6 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]6];
 ergs\[Delta]7 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]7];
-ergs\[Delta]8 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]8];
+(*ergs\[Delta]8 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]8];
 ergs\[Delta]9 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]9];
-ergs\[Delta]10 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]10];
+ergs\[Delta]10 = Map[Map[ergodicityMeasure2[#]&, #]&, minVecs\[Delta]10];*)
 
 
 data\[Delta]1 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]1, fids\[Delta]1}];
 data\[Delta]2 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]2, fids\[Delta]2}];
 data\[Delta]3 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]3, fids\[Delta]3}];
 data\[Delta]4 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]4, fids\[Delta]4}];
-data\[Delta]5 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]5, fids\[Delta]5}];
+(*data\[Delta]5 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]5, fids\[Delta]5}];*)
 data\[Delta]6 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]6, fids\[Delta]6}];
 data\[Delta]7 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]7, fids\[Delta]7}];
-data\[Delta]8 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]8, fids\[Delta]8}];
+(*data\[Delta]8 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]8, fids\[Delta]8}];
 data\[Delta]9 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]9, fids\[Delta]9}];
-data\[Delta]10 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]10, fids\[Delta]10}];
+data\[Delta]10 = MapThread[MapThread[{#1, #2}&, {#1, #2[[1;;9]]}]&, {ergs\[Delta]10, fids\[Delta]10}];*)
 
 
 fidelityVSergPlots = MapThread[ListLogLogPlot[#1, PlotLabel->MaTeX["\\delta = "<>ToString[#2], Preamble->{"\\usepackage{newtxmath}"}], 
 										  PlotLegends->PointLegend[MaTeX[betas], LegendLabel->MaTeX["\\beta", Preamble->{"\\usepackage{newtxmath}"}]], 
 										  PlotTheme->"Scientific", GridLines->Automatic, PlotRange->Full, PlotStyle->PointSize[0.014],
 										  FrameLabel->{MaTeX["\\text{Antiergodicidad}\\,\\,(\\tilde{E}_1)", Preamble->{"\\usepackage{newtxmath}"}], MaTeX["1-F(\\mathcal{A}_\\text{brutal}, \\mathcal{A}_\\text{MH})"]}]&,
-		  {{data\[Delta]1, data\[Delta]2, data\[Delta]3, data\[Delta]4, data\[Delta]5, data\[Delta]6, data\[Delta]7, data\[Delta]8, data\[Delta]9, data\[Delta]10}, deltas}];
+		  {{data\[Delta]1, data\[Delta]2, data\[Delta]3, data\[Delta]4, data\[Delta]6, data\[Delta]7}, deltas[[1;;4]]~Join~deltas[[6;;7]]}];
 
 
 Grid[{fidelityVSergPlots[[1;;2]],
 	  fidelityVSergPlots[[3;;4]],
-	  fidelityVSergPlots[[5;;6]],
-	  fidelityVSergPlots[[7;;8]],
-	  fidelityVSergPlots[[9;;]]
+	  fidelityVSergPlots[[5;;6]]
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
+
+
+SetDirectory["/media/storage/ciencia/investigacion/tesis/mh_muestras_GOOD"]
 
 
 Export["fidVSerg_deltap03_Rp5Pp3.pdf", fidelityVSergPlots[[3]]]
@@ -254,7 +247,7 @@ Grid[{fidVSratePlots[[1;;2]]~Join~{PointLegend[colors, enes]},
 }, ItemStyle->ImageSizeMultipliers->1, Spacings->{1, 1}]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Fidelidades caso tripartito*)
 
 
