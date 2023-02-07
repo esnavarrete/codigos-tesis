@@ -216,8 +216,10 @@ sampleErrorsEp008\[Delta]p0005 = distsToTarget[samplesDiffErrors\[Delta]p0005[[2
 Export["errorsPlot_Rp8Pp8_deltap0005.pdf", %52[[2]]]
 
 
-cylPlotsEp008\[Delta]p1 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p1[[1]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}];
-cylPlotsEp008\[Delta]p0005 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p0005[[2]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}];
+cylPlotsEp008\[Delta]p1 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p1[[1]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}, {20, Automatic, Automatic}];
+cylPlotsEp008\[Delta]p0005 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p0005[[2]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}, {20, Automatic, Automatic}];
+
+
 cylPlotsBRUTAL = tripleCylindricalPlotNoFilling[brutalMegaSampleRp8Pp8, 0.8, {Hue[0.11,0.9,0.85], Hue[0.55,1,0.7]}, {Full, {0,6.21},Full}];
 
 
@@ -225,22 +227,26 @@ generalLegend =
 Grid[{{SwatchLegend[{Darker[Red,.2], Darker[Green, .2]}, 
 					MaTeX[{"\\tr_A", "\\tr_B"}, Preamble->{"\\usepackage{physics, newtxmath}"}], 
 					LegendLabel->MaTeX["\\text{Monte-Carlo}"], 
-					LegendLayout->"Row"]},
-	   {SwatchLegend[{Hue[0.11,0.9,0.85], Hue[0.55,1,0.7]}, 
+					LegendLayout->"Row"], , , ,,
+		SwatchLegend[{Hue[0.11,0.9,0.85], Hue[0.55,1,0.7]}, 
 	                 MaTeX[{"\\tr_A", "\\tr_B"}, Preamble->{"\\usepackage{physics, newtxmath}"}], 
 	                 LegendLabel->MaTeX["\\text{Brutal}"], 
 	                 LegendLayout->"Row"]}
-}];
-
-
-Grid[{{Item[MaTeX["\\delta_1 = 0.1"], Frame->False], SpanFromLeft, SpanFromLeft, Item["", Frame->None]},
-	  MapThread[Show[#1, #2]&, {cylPlotsBRUTAL, cylPlotsEp008\[Delta]p1}]~Join~{Item[generalLegend, Alignment->Center, Frame->False]},
-	  {Item[MaTeX["\\delta_2 = 0.0005"], Frame->False], SpanFromLeft, SpanFromLeft}~Join~{SpanFromAbove},
-	  MapThread[Show[#1, #2]&, {cylPlotsBRUTAL, cylPlotsEp008\[Delta]p0005}]~Join~{SpanFromAbove}    
 }]
 
 
-Export["cylPlots_Rp8Pp8_delta1and2.pdf", %352]
+Grid[{{Item[MaTeX["\\delta_1 = 0.1"], Frame->False], SpanFromLeft, SpanFromLeft},
+	  MapThread[Show[#1, #2]&, {cylPlotsBRUTAL, cylPlotsEp008\[Delta]p1}],
+	  {Item[MaTeX["\\delta_2 = 0.0005"], Frame->False], SpanFromLeft, SpanFromLeft},
+	  MapThread[Show[#1, #2]&, {cylPlotsBRUTAL, cylPlotsEp008\[Delta]p0005}],
+	  {generalLegend, SpanFromLeft, SpanFromLeft}    
+}, ItemStyle->ImageSizeMultipliers->0.7, Spacings->{1, 1}]
+
+
+Directory[]
+
+
+Export["cylPlots_Rp8Pp8_delta1and2.pdf", %52]
 
 
 (* ::Subsubsection::Closed:: *)
