@@ -208,12 +208,17 @@ sampleErrorsEp008\[Delta]p0005 = distsToTarget[samplesDiffErrors\[Delta]p0005[[2
 
 
 {ListPlot[sampleErrorsEp008\[Delta]p1, PlotRange->{0, 0.008}, 
-		  PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]],
+		  PlotTheme->"Scientific", 
+		  FrameLabel->MaTeX[{"\\ket{\\psi_i}\\,(i\\text{-\[EAcute]simo elemento de la preimagen})", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]],
  ListPlot[sampleErrorsEp008\[Delta]p0005, PlotRange->{0, 0.008}, 
-          PlotTheme->"Scientific", FrameLabel->MaTeX[{"\\ket{\\psi_i}", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]]}
+          PlotTheme->"Scientific", 
+          FrameLabel->MaTeX[{"\\ket{\\psi_i}\\,(i\\text{-\[EAcute]simo elemento de la preimagen})", "d(\\mathcal{C}[\\ket{\\psi_i}], \\varrho_t)"}, Preamble->{"\\usepackage{physics, newtxmath}"}]]}
 
 
-Export["errorsPlot_Rp8Pp8_deltap0005.pdf", %52[[2]]]
+SetDirectory["/media/storage/ciencia/investigacion/tesis"]
+
+
+Export["errorsPlot_Rp8Pp8_deltap1.pdf", %17[[1]]]
 
 
 cylPlotsEp008\[Delta]p1 = tripleCylindricalPlotNoFilling[samplesDiffErrors\[Delta]p1[[1]], 0.8, Darker[#,0.2]&/@{Red,Green}, {Full, {0,6.21},Full}, {20, Automatic, Automatic}];
@@ -327,7 +332,7 @@ ListLogLogPlot[dataGood, PlotTheme->"Detailed", FrameLabel->{"N", "1 - F"}, Plot
 ListLogPlot[dataGood2, PlotTheme->"Detailed", FrameLabel->{"Tama\[NTilde]o (N)", "1 - F(A,\!\(\*SubscriptBox[\(A\), \(mc\)]\))"}, PlotLegends->errors[[1;;5]], Joined->True]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Errores de los estados en los bordes *)
 
 
@@ -335,7 +340,7 @@ ListLogPlot[dataGood2, PlotTheme->"Detailed", FrameLabel->{"Tama\[NTilde]o (N)",
 (*Bordes de las esferas *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Primer par de deltas: 0.0005 y 0.1*)
 
 
